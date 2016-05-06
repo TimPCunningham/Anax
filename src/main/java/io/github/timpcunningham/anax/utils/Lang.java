@@ -18,9 +18,9 @@ public enum Lang {
 
     private ResourceBundle getLangFile(String locale) {
         try {
-            return ResourceBundle.getBundle(locale);
+            return ResourceBundle.getBundle("lang/" + locale);
         } catch (Exception e) {
-            return ResourceBundle.getBundle("en_US");
+            return ResourceBundle.getBundle("lang/en_US");
         }
     }
 }

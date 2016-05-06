@@ -1,0 +1,6 @@
+main: io.github.timpcunningham.anax.Anax
+name: Anax
+version: 0.1
+authors: [PepsiDog, Anthonny]
+description: A map development and world management plugin
+database: true

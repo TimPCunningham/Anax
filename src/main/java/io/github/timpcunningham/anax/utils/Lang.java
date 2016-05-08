@@ -4,6 +4,11 @@ import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
 public enum Lang {
+    FLAG_DESC_ANIMALS,
+    FLAG_DESC_EXPLOSIONS,
+    FLAG_DESC_MONSTERS,
+    FLAG_DESC_PHYSICS,
+    FLAG_DESC_WEATHER,
     PLUGIN_NAME;
 
     public String get(String locale, Object... args) {

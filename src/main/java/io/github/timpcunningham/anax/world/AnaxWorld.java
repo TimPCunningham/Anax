@@ -18,17 +18,16 @@ public class AnaxWorld {
     private String worldName;
 
     //Flags
-    Map<String, Flag> flags;
+    private Map<String, Flag> flags;
 
     //Spawn
-    Map<String, Double> location;
-    Map<String, Float> direction;
+    private Map<String, Double> location;
+    private Map<String, Float> direction;
 
     //Role Lists
-    Map<Role, List<UUID>> roles;
+    private Map<Role, List<UUID>> roles;
 
     private Access access;
-
     private boolean locked;
 
     @Transient
@@ -95,6 +94,7 @@ public class AnaxWorld {
 
     /**
      * Sets the spawn from a Bukkit Location
+     *
      * @param spawn The Location that should  be set as spawn
      */
     public void setSpawn(Location spawn) {
@@ -108,6 +108,7 @@ public class AnaxWorld {
 
     /**
      * Toggles the locked status of this world
+     *
      * @return Returns the new locked status of this world
      */
     public boolean toggleLock() {
@@ -117,6 +118,7 @@ public class AnaxWorld {
 
     /**
      * Adds a player to a specific role in this world
+     *
      * @param role The role the player should be added to
      * @param member The player that is to be added
      */
@@ -126,6 +128,7 @@ public class AnaxWorld {
 
     /**
      * Removes a player from a specific role in this world
+     *
      * @param role The role the player should be removed from
      * @param member The player that is to be removed
      */
@@ -135,6 +138,7 @@ public class AnaxWorld {
 
     /**
      * Gets a list of members that belong to a specific role in this world
+     *
      * @param role The role that we wish to get a list of players for
      * @return A list of UUID's that fit this role
      */

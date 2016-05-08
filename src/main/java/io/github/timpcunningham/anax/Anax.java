@@ -2,6 +2,7 @@ package io.github.timpcunningham.anax;
 
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.minecraft.util.commands.*;
+import io.github.timpcunningham.anax.world.AnaxWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -52,6 +53,7 @@ public class Anax extends JavaPlugin {
             if(!dbProperties.exists()) {
                 dbProperties.createNewFile();
             }
+            getDatabase().find(AnaxWorld.class).findRowCount();
         } catch (PersistenceException e) {
             getLogger().info("Installing database...");
             installDDL();
@@ -86,6 +88,8 @@ public class Anax extends JavaPlugin {
     @Override
     public List<Class<?>> getDatabaseClasses() {
         List<Class<?>> dbClazz = new ArrayList<>();
+
+        dbClazz.add(AnaxWorld.class);
 
         return dbClazz;
     }

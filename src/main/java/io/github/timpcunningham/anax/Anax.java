@@ -2,6 +2,8 @@ package io.github.timpcunningham.anax;
 
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.minecraft.util.commands.*;
+import io.github.timpcunningham.anax.commands.flags.ToggleCommand;
+import io.github.timpcunningham.anax.exceptions.LocalizedCommandException;
 import io.github.timpcunningham.anax.world.AnaxWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -44,6 +46,7 @@ public class Anax extends JavaPlugin {
         };
 
         CommandsManagerRegistration cmdRegister = new CommandsManagerRegistration(this, this.commands);
+        cmdRegister.register(ToggleCommand.class);
     }
 
     private void setupDatabase() {

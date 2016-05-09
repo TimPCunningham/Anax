@@ -24,7 +24,7 @@ public enum Flag {
         return this.enabled;
     }
 
-    public boolean toggle() {
+    boolean toggle() {
         this.enabled = !enabled;
         return isEnabled();
     }

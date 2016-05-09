@@ -29,6 +29,7 @@ public class AnaxWorld {
 
     private Access access;
     private boolean locked;
+    private boolean loaded;
 
     @Transient
     World world;
@@ -38,6 +39,7 @@ public class AnaxWorld {
         location = new HashMap<>();
         direction = new HashMap<>();
         roles = new HashMap<>();
+        loaded = false;
     }
 
     /**
@@ -65,6 +67,7 @@ public class AnaxWorld {
 
         access = Access.PUBLIC;
         locked = false;
+        loaded = true;
     }
 
     /**
@@ -75,6 +78,16 @@ public class AnaxWorld {
      */
     public boolean toggleFlag(Flag flag) {
         return flags.get(flag.name().toLowerCase()).toggle();
+    }
+
+    /**
+     * Gets the value of a specified flag
+     *
+     * @param flag the flag to get the value of
+     * @return the flags value
+     */
+    public boolean getFlagValue(Flag flag) {
+        return flags.get(flag.name().toLowerCase()).isEnabled();
     }
 
     /**
@@ -208,5 +221,11 @@ public class AnaxWorld {
         this.access = access;
     }
 
+    public boolean isLoaded() {
+        return loaded;
+    }
 
+    public void setLoaded(boolean loaded) {
+        this.loaded = loaded;
+    }
 }

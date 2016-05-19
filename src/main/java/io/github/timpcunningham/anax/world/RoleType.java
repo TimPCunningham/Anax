@@ -1,7 +1,7 @@
 package io.github.timpcunningham.anax.world;
 
-public enum Role {
+public enum RoleType {
     BUILDER,
     OWNER,
-    VISITOR;
+    VISITOR
 }

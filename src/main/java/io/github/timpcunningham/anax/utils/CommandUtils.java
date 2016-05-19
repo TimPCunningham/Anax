@@ -1,9 +1,9 @@
 package io.github.timpcunningham.anax.utils;
 
 import io.github.timpcunningham.anax.exceptions.LocalizedCommandException;
-import io.github.timpcunningham.anax.world.AnaxWorld;
+import io.github.timpcunningham.anax.world.tables.AnaxWorld;
 import io.github.timpcunningham.anax.world.AnaxWorldManagement;
-import io.github.timpcunningham.anax.world.Flag;
+import io.github.timpcunningham.anax.world.FlagType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -41,9 +41,9 @@ public class CommandUtils {
         return instance.getWorld(worldName);
     }
 
-    public static Flag validateFlag(CommandSender sender, String flagName) throws LocalizedCommandException {
+    public static FlagType validateFlag(CommandSender sender, String flagName) throws LocalizedCommandException {
         try {
-            return Flag.valueOf(flagName.toUpperCase());
+            return FlagType.valueOf(flagName.toUpperCase());
         } catch (Exception e) {
             throw new LocalizedCommandException(sender, Lang.FLAG_NOT_FOUND, flagName);
         }

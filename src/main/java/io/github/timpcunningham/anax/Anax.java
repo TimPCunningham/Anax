@@ -2,9 +2,14 @@ package io.github.timpcunningham.anax;
 
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.minecraft.util.commands.*;
+import io.github.timpcunningham.anax.commands.MapCommands;
 import io.github.timpcunningham.anax.commands.flags.ToggleCommand;
-import io.github.timpcunningham.anax.exceptions.LocalizedCommandException;
-import io.github.timpcunningham.anax.world.AnaxWorld;
+import io.github.timpcunningham.anax.commands.world.CreateCommand;
+import io.github.timpcunningham.anax.utils.WorldUtils;
+import io.github.timpcunningham.anax.world.tables.AnaxWorld;
+import io.github.timpcunningham.anax.world.tables.Flag;
+import io.github.timpcunningham.anax.world.tables.Role;
+import io.github.timpcunningham.anax.world.tables.Spawn;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -29,8 +34,11 @@ public class Anax extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        getConfig().options().copyDefaults(true);
+        saveConfig();
         setupDatabase();
         setupCommands();
+        WorldUtils.loadAllWorlds();
     }
 
     public static Anax get() {
@@ -46,6 +54,8 @@ public class Anax extends JavaPlugin {
         };
 
         CommandsManagerRegistration cmdRegister = new CommandsManagerRegistration(this, this.commands);
+        cmdRegister.register(CreateCommand.class);
+        cmdRegister.register(MapCommands.class);
         cmdRegister.register(ToggleCommand.class);
     }
 
@@ -92,8 +102,15 @@ public class Anax extends JavaPlugin {
     public List<Class<?>> getDatabaseClasses() {
         List<Class<?>> dbClazz = new ArrayList<>();
 
+        dbClazz.add(Flag.class);
+        dbClazz.add(Role.class);
+        dbClazz.add(Spawn.class);
         dbClazz.add(AnaxWorld.class);
 
         return dbClazz;
+    }
+
+    public String getWorldBasePath() {
+        return Bukkit.getWorldContainer().getPath() +  getConfig().getString("worlds.container");
     }
 }

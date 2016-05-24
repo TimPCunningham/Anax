@@ -1,10 +1,7 @@
 package io.github.timpcunningham.anax.world.tables;
 
-import com.github.rmsy.channels.Channel;
-import io.github.timpcunningham.anax.utils.AnaxDatabase;
-import io.github.timpcunningham.anax.utils.ChatUtils;
-import io.github.timpcunningham.anax.utils.Lang;
-import io.github.timpcunningham.anax.utils.WorldUtils;
+import io.github.timpcunningham.anax.utils.server.AnaxDatabase;
+import io.github.timpcunningham.anax.utils.world.WorldUtils;
 import io.github.timpcunningham.anax.world.*;
 import io.github.timpcunningham.anax.world.Access;
 import net.md_5.bungee.api.ChatColor;
@@ -26,7 +23,7 @@ public class AnaxWorld {
 
     //Flags
     @Transient
-    private Map<String, Flag> flags;
+    Flags flags;
 
     //Spawn
     @Transient
@@ -45,14 +42,10 @@ public class AnaxWorld {
     @Transient
     World world;
 
-    @Transient
-    Channel channel;
-
     public AnaxWorld() {
-        flags = new HashMap<>();
+        flags = new Flags();
         roles = new HashMap<>();
         loaded = false;
-        channel = ChatUtils.getSimpleWorldChannel();
         spawn = new Spawn();
     }
 
@@ -63,9 +56,9 @@ public class AnaxWorld {
             this.spawn = new Spawn();
         }
 
-        List<Flag> dbFlags = AnaxDatabase.find(Flag.class).where().eq("world", this.worldName).findList();
-        for(Flag flag : dbFlags) {
-            flags.put(flag.getType().name().toLowerCase(), flag);
+        Flags dbFlags = (Flags) AnaxDatabase.find(Flags.class).where().eq("world", this.worldName).findUnique();
+        if(dbFlags != null) {
+            flags = dbFlags;
         }
 
         for(RoleType type : RoleType.values()) {
@@ -81,28 +74,20 @@ public class AnaxWorld {
     public void saveData() {
         AnaxDatabase.update(spawn);
 
-        for(Flag flag : flags.values()) {
-            AnaxDatabase.update(flag);
-        }
-
         for(Map<UUID,Role> roleList : roles.values()) {
             for(Role role : roleList.values()) {
                 AnaxDatabase.update(role);
             }
         }
+
+        AnaxDatabase.update(flags);
     }
 
     /**
      * Sets defaults for an Anax world
      */
     public void setDefaults() {
-        //FlagType defaults
-
-        flags.put("ANIMALS", new Flag(this.worldName, FlagType.ANIMALS, false, Lang.FLAG_DESC_ANIMALS));
-        flags.put("EXPLOSIONS", new Flag(this.worldName, FlagType.EXPLOSIONS, false, Lang.FLAG_DESC_EXPLOSIONS));
-        flags.put("MONSTERS", new Flag(this.worldName, FlagType.MONSTERS, false, Lang.FLAG_DESC_MONSTERS));
-        flags.put("PHYSICS", new Flag(this.worldName, FlagType.PHYSICS, true, Lang.FLAG_DESC_PHYSICS));
-        flags.put("WEATHER", new Flag(this.worldName, FlagType.WEATHER, false, Lang.FLAG_DESC_WEATHER));
+        flags.setWorldName(this.worldName);
 
         //Spawn defaults
         spawn.setWorldName(this.worldName);
@@ -122,29 +107,32 @@ public class AnaxWorld {
         loaded = true;
 
         AnaxDatabase.save(spawn);
-        for(Flag flag : flags.values()) {
-            AnaxDatabase.save(flag);
-        }
+        AnaxDatabase.save(flags);
     }
 
     /**
      * Toggles a flag in this Anax world
      *
-     * @param flag The flag to be toggled
+     * @param type The flag to be toggled
      * @return Returns the new value of the flag that was toggled
      */
-    public boolean toggleFlag(FlagType flag) {
-        return flags.get(flag.name()).toggle();
+    public boolean toggleFlag(FlagType type) {
+        return flags.toggle(type);
     }
 
     /**
      * Gets the value of a specified flag
      *
-     * @param flag the flag to get the value of
+     * @param type the flag to get the value of
      * @return the flags value
      */
-    public boolean getFlag(Flag flag) {
-        return flags.get(flag.getType().name().toLowerCase()).isEnabled();
+    public boolean getFlagValue(FlagType type) {
+        return flags.isEnabled(type);
+    }
+
+
+    public Map<String, Flags.FlagContianer> getFlags() {
+        return flags.getFlags();
     }
 
     /**
@@ -234,7 +222,7 @@ public class AnaxWorld {
 
     public String shortInfo() {
         List<UUID> owners = getMemeberList(RoleType.OWNER).stream().collect(Collectors.toList());
-        return  ChatColor.LIGHT_PURPLE + this.worldName + " by " + WorldUtils.uuidsToListing(owners);
+        return  ChatColor.LIGHT_PURPLE + WorldUtils.getShortName(this.worldName) + " by " + WorldUtils.uuidsToListing(owners);
     }
 
     /**
@@ -257,10 +245,6 @@ public class AnaxWorld {
 
     public void setWorldName(String worldName) {
         this.worldName = worldName;
-    }
-
-    public Map<String, Flag> getFlags() {
-        return flags;
     }
 
     public Access getAccess() {

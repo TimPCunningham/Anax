@@ -3,8 +3,7 @@ package io.github.timpcunningham.anax.world.tables;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Spawn {

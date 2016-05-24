@@ -1,6 +1,6 @@
 package io.github.timpcunningham.anax.exceptions;
 
-import io.github.timpcunningham.anax.utils.Lang;
+import io.github.timpcunningham.anax.utils.chat.Lang;
 
 public class LocalizedException extends Exception {
     private Lang reason;

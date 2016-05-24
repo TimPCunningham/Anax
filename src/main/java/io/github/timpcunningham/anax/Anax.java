@@ -2,12 +2,18 @@ package io.github.timpcunningham.anax;
 
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.minecraft.util.commands.*;
+import io.github.timpcunningham.anax.commands.ChatCommands;
 import io.github.timpcunningham.anax.commands.MapCommands;
 import io.github.timpcunningham.anax.commands.flags.ToggleCommand;
 import io.github.timpcunningham.anax.commands.world.CreateCommand;
-import io.github.timpcunningham.anax.utils.WorldUtils;
+import io.github.timpcunningham.anax.listeners.ChatListener;
+import io.github.timpcunningham.anax.listeners.Playerlisteners;
+import io.github.timpcunningham.anax.player.AnaxPlayer;
+import io.github.timpcunningham.anax.player.AnaxPlayerManager;
+import io.github.timpcunningham.anax.utils.world.WorldUtils;
+import io.github.timpcunningham.anax.world.AnaxWorldManagement;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;
-import io.github.timpcunningham.anax.world.tables.Flag;
+import io.github.timpcunningham.anax.world.tables.Flags;
 import io.github.timpcunningham.anax.world.tables.Role;
 import io.github.timpcunningham.anax.world.tables.Spawn;
 import org.bukkit.Bukkit;
@@ -38,7 +44,14 @@ public class Anax extends JavaPlugin {
         saveConfig();
         setupDatabase();
         setupCommands();
+        setupListeners();
         WorldUtils.loadAllWorlds();
+    }
+
+    @Override
+    public void onDisable() {
+        AnaxPlayerManager.getInstance().saveAll();
+        AnaxWorldManagement.getInstance().unloadAll();
     }
 
     public static Anax get() {
@@ -54,9 +67,16 @@ public class Anax extends JavaPlugin {
         };
 
         CommandsManagerRegistration cmdRegister = new CommandsManagerRegistration(this, this.commands);
+
+        cmdRegister.register(ChatCommands.class);
         cmdRegister.register(CreateCommand.class);
         cmdRegister.register(MapCommands.class);
         cmdRegister.register(ToggleCommand.class);
+    }
+
+    public void setupListeners() {
+        Bukkit.getPluginManager().registerEvents(new ChatListener(), this);
+        Bukkit.getPluginManager().registerEvents(new Playerlisteners(), this);
     }
 
     private void setupDatabase() {
@@ -102,10 +122,11 @@ public class Anax extends JavaPlugin {
     public List<Class<?>> getDatabaseClasses() {
         List<Class<?>> dbClazz = new ArrayList<>();
 
-        dbClazz.add(Flag.class);
+        dbClazz.add(AnaxPlayer.class);
+        dbClazz.add(AnaxWorld.class);
+        dbClazz.add(Flags.class);
         dbClazz.add(Role.class);
         dbClazz.add(Spawn.class);
-        dbClazz.add(AnaxWorld.class);
 
         return dbClazz;
     }

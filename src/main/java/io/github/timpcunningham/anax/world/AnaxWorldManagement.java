@@ -2,9 +2,9 @@ package io.github.timpcunningham.anax.world;
 
 import io.github.timpcunningham.anax.Anax;
 import io.github.timpcunningham.anax.exceptions.LocalizedException;
-import io.github.timpcunningham.anax.utils.AnaxDatabase;
-import io.github.timpcunningham.anax.utils.Lang;
-import io.github.timpcunningham.anax.utils.WorldUtils;
+import io.github.timpcunningham.anax.utils.server.AnaxDatabase;
+import io.github.timpcunningham.anax.utils.chat.Lang;
+import io.github.timpcunningham.anax.utils.world.WorldUtils;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;
 import org.bukkit.Bukkit;
 
@@ -73,5 +73,11 @@ public class AnaxWorldManagement {
         world.setDefaults();
 
         return loadWorld(world);
+    }
+
+    public void unloadAll() {
+        for(AnaxWorld world : loadedWorlds.values()) {
+            unloadWorld(world);
+        }
     }
 }

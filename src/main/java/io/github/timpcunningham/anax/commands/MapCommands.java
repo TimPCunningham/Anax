@@ -3,12 +3,14 @@ package io.github.timpcunningham.anax.commands;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
+import io.github.timpcunningham.anax.utils.chat.Chat;
 import io.github.timpcunningham.anax.exceptions.LocalizedCommandException;
 import io.github.timpcunningham.anax.exceptions.LocalizedException;
-import io.github.timpcunningham.anax.utils.*;
+import io.github.timpcunningham.anax.utils.chat.Lang;
+import io.github.timpcunningham.anax.utils.player.CommandUtils;
+import io.github.timpcunningham.anax.utils.world.WorldUtils;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;
 import io.github.timpcunningham.anax.world.AnaxWorldManagement;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -33,9 +35,9 @@ public class MapCommands {
            worlds = AnaxWorldManagement.getInstance().getPlayerWorlds(player.getUniqueId());
         }
 
-        player.sendMessage(Lang.COMMAND_MAPS_HEADER.get(PlayerUtils.getLocale(player)));
+        Chat.alertPlayer(player, Lang.COMMAND_MAPS_HEADER, null);
         for(AnaxWorld world : worlds) {
-            player.sendMessage(world.shortInfo());
+            Chat.alertPlayer(player, Lang.MESSAGE_DEFAULT, null, world.shortInfo());
         }
     }
 
@@ -58,8 +60,8 @@ public class MapCommands {
         if(firstLoaded != null && args.argsLength() == 0) {
             player.teleport(firstLoaded.getSpawn());
         } else if(args.argsLength() == 0){
-            player.sendMessage(Lang.SERVER_NOLOADEDMAPS.get(PlayerUtils.getLocale(player)));
-            player.sendMessage(ChatColor.RED + "/map <world>");
+            Chat.alertPlayer(player, Lang.SERVER_NOLOADEDMAPS, null);
+            Chat.alertPlayer(player, Lang.MESSAGE_DEFAULT, null, "/map <world>");
         } else { //look for loaded map
             AnaxWorld world;
             String worldPath = WorldUtils.getLongName(args.getString(0));
@@ -67,7 +69,7 @@ public class MapCommands {
             if(manager.isLoadedWorld(worldPath)) {
                 world = manager.getWorld(worldPath);
             } else {
-                world = AnaxDatabase.getWorld(worldPath);
+                world = manager.getWorld(worldPath);
                 if(world != null) {
                     world.retrieveData();
                 }

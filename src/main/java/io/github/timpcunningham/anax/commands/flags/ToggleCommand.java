@@ -3,17 +3,20 @@ package io.github.timpcunningham.anax.commands.flags;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
+import io.github.timpcunningham.anax.utils.chat.Chat;
 import io.github.timpcunningham.anax.exceptions.LocalizedCommandException;
-import io.github.timpcunningham.anax.utils.CommandUtils;
-import io.github.timpcunningham.anax.utils.Lang;
-import io.github.timpcunningham.anax.utils.PlayerUtils;
-import io.github.timpcunningham.anax.utils.WorldUtils;
+import io.github.timpcunningham.anax.utils.player.CommandUtils;
+import io.github.timpcunningham.anax.utils.chat.Lang;
+import io.github.timpcunningham.anax.utils.player.PlayerUtils;
+import io.github.timpcunningham.anax.utils.world.WorldUtils;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;
 import io.github.timpcunningham.anax.world.FlagType;
-import io.github.timpcunningham.anax.world.tables.Flag;
+import io.github.timpcunningham.anax.world.tables.Flags;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.Map;
 
 
 public class ToggleCommand {
@@ -42,7 +45,7 @@ public class ToggleCommand {
         }
 
         String flagResult = resultColor + String.valueOf(result);
-        sender.sendMessage(Lang.FLAG_VALUE_CHANGED.get(PlayerUtils.getLocale(player), flag.name(), flagResult));
+        Chat.alertPlayer(player, Lang.FLAG_VALUE_CHANGED, null, flag.name(), flagResult);
     }
 
     @Command(
@@ -57,23 +60,23 @@ public class ToggleCommand {
         AnaxWorld world = CommandUtils.validateWorldLoaded(sender, player.getWorld().getName());
 
         if(args.argsLength() == 1 && args.getString(0).toLowerCase().equals("help")) {
-            player.sendMessage(Lang.FLAG_HELP.get(locale, "Animals", false, Lang.FLAG_DESC_ANIMALS.get(locale)));
-            player.sendMessage(Lang.FLAG_HELP.get(locale, "Explosions", false, Lang.FLAG_DESC_EXPLOSIONS.get(locale)));
-            player.sendMessage(Lang.FLAG_HELP.get(locale, "Monsters", false, Lang.FLAG_DESC_MONSTERS.get(locale)));
-            player.sendMessage(Lang.FLAG_HELP.get(locale, "Physics", true, Lang.FLAG_DESC_PHYSICS.get(locale)));
-            player.sendMessage(Lang.FLAG_HELP.get(locale, "Weather", false, Lang.FLAG_DESC_WEATHER.get(locale)));
-        } else if(args.argsLength() == 0) {
-            for(Flag flag : world.getFlags().values()) {
-                String result = flag.isEnabled() ? ChatColor.GREEN.toString()  : ChatColor.RED.toString();
-                result += flag.isEnabled();
+            Map<String, Flags.FlagContianer> flags = new Flags().getFlags();
+            for(String name : flags.keySet()) {
+                String value = String.valueOf(flags.get(name).value);
+                String desc = flags.get(name).description.get(PlayerUtils.getLocale(player));
 
-                player.sendMessage(ChatColor.DARK_AQUA + flag.getType().name()
-                + ChatColor.GRAY + ": " + result);
+                Chat.alertPlayer(player, Lang.FLAG_HELP, null, name,  value, desc);
+            }
+        } else if(args.argsLength() == 0) {
+            for(String flag : world.getFlags().keySet()) {
+                Flags.FlagContianer container = world.getFlags().get(flag);
+                String result = container.value ? ChatColor.GREEN.toString()  : ChatColor.RED.toString();
+                result += container.value;
+
+                Chat.alertPlayer(player, Lang.FLAG_VALUE, null, flag, result);
             }
         } else {
-            player.sendMessage(ChatColor.RED + "/flags [help]");
+            Chat.alertPlayer(player, Lang.MESSAGE_DEFAULT, null, "/flags [help]");
         }
     }
-
-    // ANIMALS(default: true): Toggles passive mob spawning
 }

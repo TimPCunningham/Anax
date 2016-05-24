@@ -3,9 +3,13 @@ package io.github.timpcunningham.anax.commands.world;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
+import io.github.timpcunningham.anax.utils.chat.Chat;
 import io.github.timpcunningham.anax.exceptions.LocalizedCommandException;
 import io.github.timpcunningham.anax.exceptions.LocalizedException;
-import io.github.timpcunningham.anax.utils.*;
+import io.github.timpcunningham.anax.utils.chat.Lang;
+import io.github.timpcunningham.anax.utils.player.CommandUtils;
+import io.github.timpcunningham.anax.utils.player.PlayerUtils;
+import io.github.timpcunningham.anax.utils.server.AnaxDatabase;
 import io.github.timpcunningham.anax.world.RoleType;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;
 import io.github.timpcunningham.anax.world.AnaxWorldManagement;
@@ -34,10 +38,10 @@ public class CreateCommand {
             world.addMemeber(RoleType.OWNER, player.getUniqueId());
             AnaxDatabase.save(world);
         } catch (LocalizedException e) {
-            player.sendMessage(e.getReason().get(PlayerUtils.getLocale(player)));
+            Chat.alertPlayer(player, e.getReason(), null);
             return;
         }
 
-        player.sendMessage(Lang.COMMAND_CREATE_SUCCESS.get(PlayerUtils.getLocale(player)));
+        Chat.alertPlayer(player, Lang.COMMAND_CREATE_SUCCESS, null);
     }
 }

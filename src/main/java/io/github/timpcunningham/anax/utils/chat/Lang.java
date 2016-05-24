@@ -1,4 +1,4 @@
-package io.github.timpcunningham.anax.utils;
+package io.github.timpcunningham.anax.utils.chat;
 
 import java.text.MessageFormat;
 import java.util.HashMap;
@@ -6,17 +6,29 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 public enum Lang {
+    CHAT_CHANNEL_DUPLICATE,
+    CHAT_CHANNEL_SET,
+    CHAT_CHANNEL_SET_DENIED,
+    CHAT_PERMISSION_DENIED,
     COMMAND_CREATE_SUCCESS,
     COMMAND_ERROR_SENDER_NOT_PLAYER,
     COMMAND_MAPS_HEADER,
     FLAG_DESC_ANIMALS,
     FLAG_DESC_EXPLOSIONS,
+    FLAG_DESC_FIRE,
     FLAG_DESC_MONSTERS,
     FLAG_DESC_PHYSICS,
     FLAG_DESC_WEATHER,
+    FLAG_DESC_WORLD,
     FLAG_HELP,
     FLAG_NOT_FOUND,
     FLAG_VALUE_CHANGED,
+    FLAG_VALUE,
+    FORMAT_ADMIN_ALERT,
+    FORMAT_GLOBAL_ALERT,
+    FORMAT_WORLD_ALERT,
+    MESSAGE_CONSOLE,
+    MESSAGE_DEFAULT,
     PLUGIN_NAME,
     SERVER_NOLOADEDMAPS,
     SERVER_WORLD_LOADED,

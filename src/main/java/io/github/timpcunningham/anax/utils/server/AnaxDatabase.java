@@ -1,4 +1,4 @@
-package io.github.timpcunningham.anax.utils;
+package io.github.timpcunningham.anax.utils.server;
 
 import com.avaje.ebean.Query;
 import io.github.timpcunningham.anax.Anax;

@@ -1,8 +1,9 @@
-package io.github.timpcunningham.anax.utils;
+package io.github.timpcunningham.anax.utils.world;
 
 import io.github.timpcunningham.anax.Anax;
 import io.github.timpcunningham.anax.exceptions.LocalizedCommandException;
 import io.github.timpcunningham.anax.exceptions.LocalizedException;
+import io.github.timpcunningham.anax.utils.chat.Lang;
 import io.github.timpcunningham.anax.world.Access;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;
 import io.github.timpcunningham.anax.world.AnaxWorldManagement;
@@ -49,7 +50,7 @@ public class WorldUtils {
     }
 
     public static String getLongName(String shortName) {
-        return Anax.get().getWorldBasePath() + "/" + shortName;
+        return Anax.get().getWorldBasePath() + shortName;
     }
 
     public static boolean isBukkitWorldLoaded(final String worldName) {
@@ -82,7 +83,7 @@ public class WorldUtils {
         String result = "";
 
         for(int index = 0; index < names.size(); index++) {
-            if(index == (names.size()-1)) {
+            if(index == (names.size()-1) && names.size() > 1) {
                 result += "and " + names.get(index); //Change to name lookup eventually
             } else {
                 result += names.get(index) + ", ";

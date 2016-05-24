@@ -1,4 +1,4 @@
-package io.github.timpcunningham.anax.utils;
+package io.github.timpcunningham.anax.utils.world;
 
 import org.bukkit.World;
 import org.bukkit.generator.ChunkGenerator;

@@ -1,4 +1,4 @@
-package io.github.timpcunningham.anax.utils;
+package io.github.timpcunningham.anax.utils.player;
 
 import org.bukkit.entity.Player;
 

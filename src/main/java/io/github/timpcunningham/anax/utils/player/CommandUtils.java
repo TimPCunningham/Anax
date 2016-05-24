@@ -1,6 +1,7 @@
-package io.github.timpcunningham.anax.utils;
+package io.github.timpcunningham.anax.utils.player;
 
 import io.github.timpcunningham.anax.exceptions.LocalizedCommandException;
+import io.github.timpcunningham.anax.utils.chat.Lang;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;
 import io.github.timpcunningham.anax.world.AnaxWorldManagement;
 import io.github.timpcunningham.anax.world.FlagType;

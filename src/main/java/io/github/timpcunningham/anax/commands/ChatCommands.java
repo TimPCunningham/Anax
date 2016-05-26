@@ -55,7 +55,7 @@ public class ChatCommands {
             AnaxPlayer anaxPlayer = AnaxPlayerManager.getInstance().getAnaxPlayer(player.getUniqueId());
 
             if(!player.getPlayer().hasPermission(channel.getPermission())) {
-                throw new LocalizedCommandException(player.getPlayer(), Lang.CHAT_CHANNEL_SET_DENIED, channel.name());
+                throw new LocalizedCommandException(player.getPlayer(), Lang.CHAT_PERMISSION_DENIED, channel.name());
             }
 
             if(args.argsLength() == 0) {
@@ -69,9 +69,9 @@ public class ChatCommands {
             }
         } else {
             if(args.argsLength() > 0) {
-                Chat.ConsoleChat(Channel.ADMIN, args.getJoinedStrings(0));
+                Chat.ConsoleChat(channel, args.getJoinedStrings(0));
             } else {
-                throw new LocalizedCommandException(sender, Lang.CHAT_CHANNEL_SET_DENIED, Channel.ADMIN.name());
+                throw new LocalizedCommandException(sender, Lang.CHAT_CHANNEL_SET_DENIED, channel.name());
             }
         }
     }

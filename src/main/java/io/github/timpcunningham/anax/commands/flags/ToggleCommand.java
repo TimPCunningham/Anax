@@ -54,6 +54,7 @@ public class ToggleCommand {
             usage = "[help]",
             min = 0, max = 1
     )
+    @CommandPermissions("anax.command.flags")
     public static void flags(CommandContext args, CommandSender sender) throws LocalizedCommandException {
         Player player = CommandUtils.validateAsPlayer(sender);
         String locale = PlayerUtils.getLocale(player);

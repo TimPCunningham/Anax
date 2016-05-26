@@ -10,6 +10,7 @@ import java.util.UUID;
 
 public class AnaxPlayerManager {
     private static AnaxPlayerManager self;
+    private static final String serverUUID = "00000000-0000-0000-0000-000000000000";
     Map<UUID, AnaxPlayer> players;
 
     private AnaxPlayerManager() {
@@ -53,5 +54,22 @@ public class AnaxPlayerManager {
 
     public AnaxPlayer getAnaxPlayer(UUID uuid) {
         return players.get(uuid);
+    }
+
+    public AnaxPlayer getServerAsPlayer() {
+        return players.get(UUID.fromString(serverUUID));
+    }
+
+    public void createServerPlayer() {
+        AnaxPlayer serverPlayer = AnaxDatabase.getAnaxPlayer(UUID.fromString(serverUUID));
+
+        if(serverPlayer == null) {
+            serverPlayer = new AnaxPlayer();
+            serverPlayer.setPlayer(null);
+            serverPlayer.setName("Anax");
+            serverPlayer.setFirstJoin(new Date());
+            serverPlayer.setJoins(Integer.MAX_VALUE);
+        }
+        players.put(UUID.fromString(serverUUID), serverPlayer);
     }
 }

@@ -2,6 +2,7 @@ package io.github.timpcunningham.anax.world;
 
 import io.github.timpcunningham.anax.Anax;
 import io.github.timpcunningham.anax.exceptions.LocalizedException;
+import io.github.timpcunningham.anax.player.AnaxPlayerManager;
 import io.github.timpcunningham.anax.utils.server.AnaxDatabase;
 import io.github.timpcunningham.anax.utils.chat.Lang;
 import io.github.timpcunningham.anax.utils.world.WorldUtils;
@@ -79,5 +80,24 @@ public class AnaxWorldManagement {
         for(AnaxWorld world : loadedWorlds.values()) {
             unloadWorld(world);
         }
+    }
+
+    public AnaxWorld getDefaultWorld() {
+        return loadedWorlds.get(Bukkit.getWorlds().get(0).getName());
+    }
+
+    public void setupDefaultWorld() {
+        String defaultWorldName = Bukkit.getWorlds().get(0).getName();
+        AnaxWorld world = AnaxDatabase.getWorld(defaultWorldName);
+
+        if(world == null) {
+            world = new AnaxWorld();
+            world.setWorld(Bukkit.getWorlds().get(0));
+            world.setDefaults();
+            world.setLocked(true);
+            world.setWorldName(Bukkit.getWorlds().get(0).getName());
+            world.addMemeber(RoleType.OWNER, AnaxPlayerManager.getInstance().getServerAsPlayer().getUuid());
+        }
+        loadedWorlds.put(world.getWorldName(), world);
     }
 }

@@ -77,6 +77,7 @@ public class WorldUtils {
                 Anax.get().getLogger().severe(Lang.SERVER_WORLD_LOAD_FAILED.get("en_US", getShortName(world.getWorldName())));
             }
         }
+        management.setupDefaultWorld();
     }
 
     public static String uuidsToListing(List<UUID> names) {

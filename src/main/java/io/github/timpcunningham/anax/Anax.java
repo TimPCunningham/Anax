@@ -45,6 +45,7 @@ public class Anax extends JavaPlugin {
         setupDatabase();
         setupCommands();
         setupListeners();
+        AnaxPlayerManager.getInstance().createServerPlayer();
         WorldUtils.loadAllWorlds();
     }
 

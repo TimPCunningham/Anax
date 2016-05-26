@@ -2,6 +2,7 @@ package io.github.timpcunningham.anax.utils.server;
 
 import com.avaje.ebean.Query;
 import io.github.timpcunningham.anax.Anax;
+import io.github.timpcunningham.anax.player.AnaxPlayer;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;
 import io.github.timpcunningham.anax.world.RoleType;
 
@@ -37,6 +38,10 @@ public class AnaxDatabase {
 
     public static boolean isWorld(String worldName) {
         return Anax.get().getDatabase().find(AnaxWorld.class).where().eq("worldName", worldName).findRowCount() > 0;
+    }
+
+    public static AnaxPlayer getAnaxPlayer(UUID uuid) {
+        return Anax.get().getDatabase().find(AnaxPlayer.class).where().eq("uuid", uuid).findUnique();
     }
 
     public static void save(Object obj) {

@@ -37,8 +37,9 @@ public class Debug {
 
     private static String caller() {
         StackTraceElement[] element = Thread.currentThread().getStackTrace();
-        String clazz = element[3].getClassName();
+        String[] clazzes = element[3].getClassName().split("\\.");
+        String clazz = clazzes[clazzes.length - 1];
         int line = element[3].getLineNumber();
-        return clazz + ":" + line + ": ";
+        return clazz + ".java:" + line + ": ";
     }
 }

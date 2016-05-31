@@ -37,6 +37,9 @@ public class AnaxWorld {
 
     @Enumerated(value = EnumType.STRING)
     private Access access;
+    @Enumerated(value = EnumType.STRING)
+    private Phase phase;
+
     private boolean locked;
     private boolean loaded;
 
@@ -104,6 +107,7 @@ public class AnaxWorld {
         }
 
         access = Access.PUBLIC;
+        phase = Phase.DEVELOPMENT;
         locked = false;
         loaded = true;
 
@@ -262,6 +266,14 @@ public class AnaxWorld {
 
     public void setAccess(Access access) {
         this.access = access;
+    }
+
+    public Phase getPhase() {
+        return phase;
+    }
+
+    public void setPhase(Phase phase) {
+        this.phase = phase;
     }
 
     public boolean isLoaded() {

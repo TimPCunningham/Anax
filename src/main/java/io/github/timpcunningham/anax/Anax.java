@@ -6,6 +6,7 @@ import io.github.timpcunningham.anax.commands.ChatCommands;
 import io.github.timpcunningham.anax.commands.MapCommands;
 import io.github.timpcunningham.anax.commands.flags.ToggleCommand;
 import io.github.timpcunningham.anax.commands.world.CreateCommand;
+import io.github.timpcunningham.anax.commands.world.MembersCommands;
 import io.github.timpcunningham.anax.listeners.ChatListener;
 import io.github.timpcunningham.anax.listeners.Playerlisteners;
 import io.github.timpcunningham.anax.player.AnaxPlayer;
@@ -72,6 +73,7 @@ public class Anax extends JavaPlugin {
         cmdRegister.register(ChatCommands.class);
         cmdRegister.register(CreateCommand.class);
         cmdRegister.register(MapCommands.class);
+        cmdRegister.register(MembersCommands.class);
         cmdRegister.register(ToggleCommand.class);
     }
 

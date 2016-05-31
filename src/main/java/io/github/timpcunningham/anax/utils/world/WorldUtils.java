@@ -43,15 +43,6 @@ public class WorldUtils {
 
     }
 
-    public static String getShortName(String longName) {
-        String[] parts = longName.split("/");
-
-        return parts[parts.length - 1];
-    }
-
-    public static String getLongName(String shortName) {
-        return Anax.get().getWorldBasePath() + shortName;
-    }
 
     public static boolean isBukkitWorldLoaded(final String worldName) {
         return Bukkit.getWorlds().stream().filter(world -> world.getName().equals(worldName)).count() > 0;
@@ -72,9 +63,9 @@ public class WorldUtils {
         for(AnaxWorld world : worlds) {
             try {
                 management.loadWorld(world);
-                Anax.get().getLogger().info(Lang.SERVER_WORLD_LOADED.get("en_US", getShortName(world.getWorldName())));
+                Anax.get().getLogger().info(Lang.SERVER_WORLD_LOADED.get("en_US", world.getShortName()));
             } catch (LocalizedException  e) {
-                Anax.get().getLogger().severe(Lang.SERVER_WORLD_LOAD_FAILED.get("en_US", getShortName(world.getWorldName())));
+                Anax.get().getLogger().severe(Lang.SERVER_WORLD_LOAD_FAILED.get("en_US", world.getShortName()));
             }
         }
         management.setupDefaultWorld();

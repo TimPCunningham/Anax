@@ -10,6 +10,8 @@ import io.github.timpcunningham.anax.utils.chat.Lang;
 import io.github.timpcunningham.anax.utils.player.CommandUtils;
 import io.github.timpcunningham.anax.utils.player.PlayerUtils;
 import io.github.timpcunningham.anax.utils.server.AnaxDatabase;
+import io.github.timpcunningham.anax.utils.server.Debug;
+import io.github.timpcunningham.anax.utils.server.Profiler;
 import io.github.timpcunningham.anax.world.RoleType;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;
 import io.github.timpcunningham.anax.world.AnaxWorldManagement;
@@ -26,6 +28,9 @@ public class CreateCommand {
     )
     @CommandPermissions("anax.command.create")
     public static void create(CommandContext args, CommandSender sender) throws LocalizedCommandException {
+        Profiler profiler = new Profiler("Create Command");
+        profiler.start();
+
         if(AnaxDatabase.isWorld(args.getString(0))) {
             throw new LocalizedCommandException(sender, Lang.WORLD_ALREADY_EXISTS, args.getString(0));
         }
@@ -34,7 +39,7 @@ public class CreateCommand {
         //TODO - Add check for worlds created
 
         try {
-            AnaxWorld world = AnaxWorldManagement.getInstance().createWorld(args.getString(0));
+            AnaxWorld world = AnaxWorldManagement.getInstance().createWorld(args.getString(0), player.getUniqueId());
             world.addMemeber(RoleType.OWNER, player.getUniqueId());
             AnaxDatabase.save(world);
         } catch (LocalizedException e) {
@@ -43,5 +48,8 @@ public class CreateCommand {
         }
 
         Chat.alertPlayer(player, Lang.COMMAND_CREATE_SUCCESS, null);
+
+        profiler.end();
+        Debug.ops(profiler.profile());
     }
 }

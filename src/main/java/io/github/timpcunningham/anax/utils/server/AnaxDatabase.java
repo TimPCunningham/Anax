@@ -27,8 +27,12 @@ public class AnaxDatabase {
         }
     }
 
-    public static AnaxWorld getWorld(String worldName) {
-        return Anax.get().getDatabase().find(AnaxWorld.class).where().eq("worldName", worldName).findUnique();
+    public static AnaxWorld getWorldByShortName(String worldName) {
+        return Anax.get().getDatabase().find(AnaxWorld.class).where().eq("shortName", worldName).findUnique();
+    }
+
+    public static AnaxWorld getWorldByFullName(String worldName) {
+        return Anax.get().getDatabase().find(AnaxWorld.class).where().eq("fullName", worldName).findUnique();
     }
 
 
@@ -37,7 +41,7 @@ public class AnaxDatabase {
     }
 
     public static boolean isWorld(String worldName) {
-        return Anax.get().getDatabase().find(AnaxWorld.class).where().eq("worldName", worldName).findRowCount() > 0;
+        return Anax.get().getDatabase().find(AnaxWorld.class).where().eq("shortName", worldName).findRowCount() > 0;
     }
 
     public static AnaxPlayer getAnaxPlayer(UUID uuid) {

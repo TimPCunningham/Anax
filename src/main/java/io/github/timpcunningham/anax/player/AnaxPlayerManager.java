@@ -1,5 +1,6 @@
 package io.github.timpcunningham.anax.player;
 
+import io.github.timpcunningham.anax.Anax;
 import io.github.timpcunningham.anax.utils.server.AnaxDatabase;
 import org.bukkit.entity.Player;
 
@@ -31,12 +32,12 @@ public class AnaxPlayerManager {
             anaxPlayer.setUuid(player.getUniqueId());
             anaxPlayer.setFirstJoin(new Date());
             anaxPlayer.setChannel(Channel.GLOBAL);
-            AnaxDatabase.save(anaxPlayer);
         }
 
         anaxPlayer.setName(player.getName()); //update name when adding
         anaxPlayer.setPlayer(player);
         anaxPlayer.setJoins(anaxPlayer.getJoins() + 1);
+        AnaxDatabase.save(anaxPlayer);
 
         players.put(player.getUniqueId(), anaxPlayer);
     }
@@ -56,6 +57,15 @@ public class AnaxPlayerManager {
         return players.get(uuid);
     }
 
+    public AnaxPlayer findAnaxPlayer(String name) {
+        AnaxPlayer result = (AnaxPlayer) AnaxDatabase.find(AnaxPlayer.class).where().eq("name", name).findUnique();
+
+        if(result != null && players.containsKey(result.getUuid())) {
+            return players.get(result.getUuid());
+        }
+        return result;
+    }
+
     public AnaxPlayer getServerAsPlayer() {
         return players.get(UUID.fromString(serverUUID));
     }
@@ -66,10 +76,11 @@ public class AnaxPlayerManager {
         if(serverPlayer == null) {
             serverPlayer = new AnaxPlayer();
             serverPlayer.setPlayer(null);
+            serverPlayer.setUuid(UUID.fromString(serverUUID));
             serverPlayer.setName("Anax");
             serverPlayer.setFirstJoin(new Date());
             serverPlayer.setJoins(Integer.MAX_VALUE);
         }
-        players.put(UUID.fromString(serverUUID), serverPlayer);
+        players.put(serverPlayer.getUuid(), serverPlayer);
     }
 }

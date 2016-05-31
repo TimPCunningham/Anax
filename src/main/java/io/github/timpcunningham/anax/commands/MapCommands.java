@@ -8,6 +8,7 @@ import io.github.timpcunningham.anax.exceptions.LocalizedCommandException;
 import io.github.timpcunningham.anax.exceptions.LocalizedException;
 import io.github.timpcunningham.anax.utils.chat.Lang;
 import io.github.timpcunningham.anax.utils.player.CommandUtils;
+import io.github.timpcunningham.anax.utils.server.AnaxDatabase;
 import io.github.timpcunningham.anax.utils.world.WorldUtils;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;
 import io.github.timpcunningham.anax.world.AnaxWorldManagement;
@@ -63,19 +64,15 @@ public class MapCommands {
             Chat.alertPlayer(player, Lang.SERVER_NOLOADEDMAPS, null);
             Chat.alertPlayer(player, Lang.MESSAGE_DEFAULT, null, "/map <world>");
         } else { //look for loaded map
-            AnaxWorld world;
-            String worldPath = WorldUtils.getLongName(args.getString(0));
+            AnaxWorld world = AnaxDatabase.getWorldByShortName(args.getString(0));
 
-            if(manager.isLoadedWorld(worldPath)) {
-                world = manager.getWorld(worldPath);
-            } else {
-                world = manager.getWorld(worldPath);
-                if(world != null) {
-                    world.retrieveData();
-                }
-            }
             if(world == null) {
                 throw new LocalizedCommandException(sender, Lang.WORLD_NOT_FOUND, args.getString(0));
+            }
+            if(world.isLoaded()) { //if loaded get the loaded world from the manager
+                world = manager.getWorld(world.getFullName());
+            } else {
+                world.retrieveData();
             }
             if(!WorldUtils.CanVisit(player, world)) {
                 throw new LocalizedCommandException(sender, Lang.WORLD_CANT_ACCESS);

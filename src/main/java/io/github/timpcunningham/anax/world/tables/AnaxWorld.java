@@ -19,7 +19,8 @@ import java.util.stream.Collectors;
 public class AnaxWorld {
 
     @Id
-    private String worldName;
+    private String fullName;
+    private String shortName;
 
     //Flags
     @Transient
@@ -51,18 +52,18 @@ public class AnaxWorld {
 
     public void retrieveData() {
         try {
-            this.spawn = (Spawn) AnaxDatabase.find(Spawn.class).where().eq("worldName", this.worldName).findUnique();
+            this.spawn = (Spawn) AnaxDatabase.find(Spawn.class).where().eq("worldName", this.fullName).findUnique();
         } catch (Exception e) {
             this.spawn = new Spawn();
         }
 
-        Flags dbFlags = (Flags) AnaxDatabase.find(Flags.class).where().eq("world", this.worldName).findUnique();
+        Flags dbFlags = (Flags) AnaxDatabase.find(Flags.class).where().eq("world", this.fullName).findUnique();
         if(dbFlags != null) {
             flags = dbFlags;
         }
 
         for(RoleType type : RoleType.values()) {
-            List<Role> dbRoles = AnaxDatabase.find(Role.class).where().eq("world", worldName).eq("type", type).findList();
+            List<Role> dbRoles = AnaxDatabase.find(Role.class).where().eq("world", fullName).eq("type", type).findList();
             roles.put(type.name(), new HashMap<>());
 
             for(Role role : dbRoles) {
@@ -87,10 +88,10 @@ public class AnaxWorld {
      * Sets defaults for an Anax world
      */
     public void setDefaults() {
-        flags.setWorldName(this.worldName);
+        flags.setWorldName(this.fullName);
 
         //Spawn defaults
-        spawn.setWorldName(this.worldName);
+        spawn.setWorldName(this.fullName);
         spawn.setX(0.5);
         spawn.setY(0.5);
         spawn.setZ(0.5);
@@ -177,7 +178,7 @@ public class AnaxWorld {
      */
     @Transient
     public void addMemeber(RoleType type, UUID member) {
-        Role role = new Role(this.worldName, type, member);
+        Role role = new Role(this.fullName, type, member);
         roles.get(type.name()).put(member, role);
         AnaxDatabase.save(role);
     }
@@ -222,7 +223,7 @@ public class AnaxWorld {
 
     public String shortInfo() {
         List<UUID> owners = getMemeberList(RoleType.OWNER).stream().collect(Collectors.toList());
-        return  ChatColor.LIGHT_PURPLE + WorldUtils.getShortName(this.worldName) + " by " + WorldUtils.uuidsToListing(owners);
+        return  ChatColor.LIGHT_PURPLE + this.shortName + " by " + WorldUtils.uuidsToListing(owners);
     }
 
     /**
@@ -239,12 +240,20 @@ public class AnaxWorld {
         this.locked = locked;
     }
 
-    public String getWorldName() {
-        return worldName;
+    public String getShortName() {
+        return shortName;
     }
 
-    public void setWorldName(String worldName) {
-        this.worldName = worldName;
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public Access getAccess() {

@@ -46,15 +46,15 @@ public class AnaxWorldManagement {
     }
 
     public AnaxWorld loadWorld(AnaxWorld world) throws LocalizedException {
-        if(WorldUtils.isBukkitWorldLoaded(world.getWorldName())) {
-            throw new LocalizedException(Lang.WORLD_ALREADY_LOADED, WorldUtils.getShortName(world.getWorldName()));
+        if(WorldUtils.isBukkitWorldLoaded(world.getFullName())) {
+            throw new LocalizedException(Lang.WORLD_ALREADY_LOADED, world.getShortName());
         }
 
-        WorldUtils.loadBukkitWorld(world.getWorldName());
+        WorldUtils.loadBukkitWorld(world.getFullName());
         world.setLoaded(true);
-        world.setWorld(Bukkit.getWorld(world.getWorldName()));
+        world.setWorld(Bukkit.getWorld(world.getFullName()));
         world.retrieveData();
-        loadedWorlds.put(world.getWorldName(), world);
+        loadedWorlds.put(world.getFullName(), world);
         return world;
     }
 
@@ -63,14 +63,15 @@ public class AnaxWorldManagement {
         world.setLoaded(false);
         world.saveData();
         AnaxDatabase.update(world);
-        loadedWorlds.remove(world.getWorldName());
+        loadedWorlds.remove(world.getFullName());
     }
 
-    public AnaxWorld createWorld(String worldName) throws LocalizedException {
-        String fullPath = Anax.get().getWorldBasePath() + worldName;
+    public AnaxWorld createWorld(String worldName, UUID creator) throws LocalizedException {
+        String fullPath = Anax.get().getWorldBasePath() + "/" + String.valueOf(creator) + "/" + worldName;
 
         AnaxWorld world = new AnaxWorld();
-        world.setWorldName(fullPath);
+        world.setShortName(worldName);
+        world.setFullName(fullPath);
         world.setDefaults();
 
         return loadWorld(world);
@@ -87,17 +88,17 @@ public class AnaxWorldManagement {
     }
 
     public void setupDefaultWorld() {
-        String defaultWorldName = Bukkit.getWorlds().get(0).getName();
-        AnaxWorld world = AnaxDatabase.getWorld(defaultWorldName);
+        AnaxWorld world = AnaxDatabase.getWorldByShortName("Hub");
 
         if(world == null) {
             world = new AnaxWorld();
             world.setWorld(Bukkit.getWorlds().get(0));
             world.setDefaults();
             world.setLocked(true);
-            world.setWorldName(Bukkit.getWorlds().get(0).getName());
+            world.setFullName(Bukkit.getWorlds().get(0).getName());
+            world.setShortName("Hub");
             world.addMemeber(RoleType.OWNER, AnaxPlayerManager.getInstance().getServerAsPlayer().getUuid());
         }
-        loadedWorlds.put(world.getWorldName(), world);
+        loadedWorlds.put(world.getFullName(), world);
     }
 }

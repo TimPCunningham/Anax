@@ -53,6 +53,14 @@ public class AnaxPlayerManager {
         }
     }
 
+    public String getName(UUID uuid) {
+        AnaxPlayer player = this.getAnaxPlayer(uuid);
+        if(player == null) {
+            return "Unknown";
+        }
+        return player.getName();
+    }
+
     public AnaxPlayer getAnaxPlayer(UUID uuid) {
         return players.get(uuid);
     }

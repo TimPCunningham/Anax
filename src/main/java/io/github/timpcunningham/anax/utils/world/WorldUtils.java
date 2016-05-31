@@ -3,6 +3,7 @@ package io.github.timpcunningham.anax.utils.world;
 import io.github.timpcunningham.anax.Anax;
 import io.github.timpcunningham.anax.exceptions.LocalizedCommandException;
 import io.github.timpcunningham.anax.exceptions.LocalizedException;
+import io.github.timpcunningham.anax.player.AnaxPlayerManager;
 import io.github.timpcunningham.anax.utils.chat.Lang;
 import io.github.timpcunningham.anax.world.Access;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;
@@ -73,12 +74,16 @@ public class WorldUtils {
 
     public static String uuidsToListing(List<UUID> names) {
         String result = "";
+        AnaxPlayerManager manager = AnaxPlayerManager.getInstance();
 
         for(int index = 0; index < names.size(); index++) {
+            String name = manager.getName(names.get(index));
             if(index == (names.size()-1) && names.size() > 1) {
-                result += "and " + names.get(index); //Change to name lookup eventually
+                result += "and " + name; //Change to name lookup eventually
+            } else if(names.size() == 1){
+                result = name;
             } else {
-                result += names.get(index) + ", ";
+                result += name + ", ";
             }
         }
         return result;

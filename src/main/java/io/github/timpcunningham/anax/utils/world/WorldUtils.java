@@ -41,7 +41,6 @@ public class WorldUtils {
                     world.isRole(RoleType.BUILDER, uuid) ||
                     world.isRole(RoleType.VISITOR, uuid);
         }
-
     }
 
 

@@ -1,10 +1,15 @@
 package io.github.timpcunningham.anax.utils.server;
 
+import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.Query;
+import com.avaje.ebean.Transaction;
 import io.github.timpcunningham.anax.Anax;
 import io.github.timpcunningham.anax.player.AnaxPlayer;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;
 import io.github.timpcunningham.anax.world.RoleType;
+import io.github.timpcunningham.anax.world.tables.Flags;
+import io.github.timpcunningham.anax.world.tables.Role;
+import io.github.timpcunningham.anax.world.tables.Spawn;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +65,23 @@ public class AnaxDatabase {
         return Anax.get().getDatabase().find(clazz);
     }
 
-    public static void delete(Object obj) {
-        Anax.get().getDatabase().delete(obj);
+    public static void delete(Object object) {
+        Anax.get().getDatabase().delete(object);
     }
+
+    public static void deleteWorld(AnaxWorld world) {
+        Spawn spawn = (Spawn)find(Spawn.class).where().eq("worldName", world.getFullName()).findUnique();
+        Flags flags = (Flags)find(Flags.class).where().eq("worldName", world.getFullName()).findUnique();
+
+        for(RoleType role : RoleType.values()) {
+            for (UUID uuid : world.getMemeberList(role)) {
+                world.removeMember(role, uuid);
+            }
+        }
+
+        delete(spawn);
+        delete(flags);
+        delete(world);
+    }
+
 }

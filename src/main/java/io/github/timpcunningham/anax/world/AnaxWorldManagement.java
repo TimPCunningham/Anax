@@ -59,6 +59,8 @@ public class AnaxWorldManagement {
     }
 
     public void unloadWorld(AnaxWorld world) {
+        AnaxPlayerManager.getInstance().sendToHub(world);
+
         Bukkit.unloadWorld(world.getWorld(), true);
         world.setLoaded(false);
         world.saveData();
@@ -66,8 +68,12 @@ public class AnaxWorldManagement {
         loadedWorlds.remove(world.getFullName());
     }
 
+    public void removeWorld(String name) {
+        loadedWorlds.remove(name);
+    }
+
     public AnaxWorld createWorld(String worldName, UUID creator) throws LocalizedException {
-        String fullPath = Anax.get().getWorldBasePath() + "/" + String.valueOf(creator) + "/" + worldName;
+        String fullPath = Anax.get().getWorldBasePath() + String.valueOf(creator) + "/" + worldName;
 
         AnaxWorld world = new AnaxWorld();
         world.setShortName(worldName);
@@ -93,10 +99,10 @@ public class AnaxWorldManagement {
         if(world == null) {
             world = new AnaxWorld();
             world.setWorld(Bukkit.getWorlds().get(0));
-            world.setDefaults();
-            world.setLocked(true);
             world.setFullName(Bukkit.getWorlds().get(0).getName());
             world.setShortName("Hub");
+            world.setDefaults();
+            world.setLocked(true);
             world.addMemeber(RoleType.OWNER, AnaxPlayerManager.getInstance().getServerAsPlayer().getUuid());
         }
         loadedWorlds.put(world.getFullName(), world);

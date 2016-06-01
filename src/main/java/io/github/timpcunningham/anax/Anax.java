@@ -4,9 +4,11 @@ import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.minecraft.util.commands.*;
 import io.github.timpcunningham.anax.commands.ChatCommands;
 import io.github.timpcunningham.anax.commands.MapCommands;
+import io.github.timpcunningham.anax.commands.confirm.Confrim;
 import io.github.timpcunningham.anax.commands.flags.ToggleCommand;
 import io.github.timpcunningham.anax.commands.world.CreateCommand;
 import io.github.timpcunningham.anax.commands.world.MembersCommands;
+import io.github.timpcunningham.anax.commands.world.delete.DeleteCommand;
 import io.github.timpcunningham.anax.listeners.ChatListener;
 import io.github.timpcunningham.anax.listeners.Playerlisteners;
 import io.github.timpcunningham.anax.player.AnaxPlayer;
@@ -71,7 +73,9 @@ public class Anax extends JavaPlugin {
         CommandsManagerRegistration cmdRegister = new CommandsManagerRegistration(this, this.commands);
 
         cmdRegister.register(ChatCommands.class);
+        cmdRegister.register(Confrim.class);
         cmdRegister.register(CreateCommand.class);
+        cmdRegister.register(DeleteCommand.class);
         cmdRegister.register(MapCommands.class);
         cmdRegister.register(MembersCommands.class);
         cmdRegister.register(ToggleCommand.class);
@@ -117,6 +121,7 @@ public class Anax extends JavaPlugin {
             }
         } catch (CommandException e) {
             sender.sendMessage(ChatColor.RED + e.getMessage());
+            e.printStackTrace();
         }
         return true;
     }

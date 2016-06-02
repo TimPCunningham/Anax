@@ -43,7 +43,6 @@ public class WorldUtils {
         }
     }
 
-
     public static boolean isBukkitWorldLoaded(final String worldName) {
         return Bukkit.getWorlds().stream().filter(world -> world.getName().equals(worldName)).count() > 0;
     }

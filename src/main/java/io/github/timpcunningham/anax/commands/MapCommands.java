@@ -26,6 +26,7 @@ public class MapCommands {
             flags = "a"
     )
     @CommandPermissions("anax.command.maps")
+    //TODO Implement proper maps command to use paging
     public static void maps(CommandContext args, CommandSender sender) throws LocalizedCommandException {
         Player player = CommandUtils.validateAsPlayer(sender);
         List<AnaxWorld> worlds;

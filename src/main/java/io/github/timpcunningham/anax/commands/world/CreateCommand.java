@@ -43,7 +43,7 @@ public class CreateCommand {
             world.addMemeber(RoleType.OWNER, player.getUniqueId());
             AnaxDatabase.save(world);
         } catch (LocalizedException e) {
-            Chat.alertPlayer(player, e.getReason(), null);
+            Chat.alertPlayer(player, e.getReason(), null, e.getArgs());
             return;
         }
 

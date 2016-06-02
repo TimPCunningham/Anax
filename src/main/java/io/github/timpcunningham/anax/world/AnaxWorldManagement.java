@@ -94,7 +94,7 @@ public class AnaxWorldManagement {
     }
 
     public void setupDefaultWorld() {
-        AnaxWorld world = AnaxDatabase.getWorldByShortName("Hub");
+        AnaxWorld world = AnaxDatabase.getWorldByFullName(Bukkit.getWorlds().get(0).getName());
 
         if(world == null) {
             world = new AnaxWorld();
@@ -104,6 +104,9 @@ public class AnaxWorldManagement {
             world.setDefaults();
             world.setLocked(true);
             world.addMemeber(RoleType.OWNER, AnaxPlayerManager.getInstance().getServerAsPlayer().getUuid());
+            AnaxDatabase.save(world);
+        } else {
+            world.retrieveData();
         }
         loadedWorlds.put(world.getFullName(), world);
     }

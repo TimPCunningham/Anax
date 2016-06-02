@@ -2,6 +2,8 @@ package io.github.timpcunningham.anax.player;
 
 import io.github.timpcunningham.anax.Anax;
 import io.github.timpcunningham.anax.utils.server.AnaxDatabase;
+import io.github.timpcunningham.anax.world.AnaxWorldManagement;
+import io.github.timpcunningham.anax.world.tables.AnaxWorld;
 import org.bukkit.entity.Player;
 
 import java.util.Date;
@@ -90,5 +92,13 @@ public class AnaxPlayerManager {
             serverPlayer.setJoins(Integer.MAX_VALUE);
         }
         players.put(serverPlayer.getUuid(), serverPlayer);
+    }
+
+    public void sendToHub(AnaxWorld world) {
+        AnaxWorld hub = AnaxWorldManagement.getInstance().getDefaultWorld();
+
+        for(Player player : world.getWorld().getPlayers()) {
+            player.teleport(hub.getSpawn());
+        }
     }
 }

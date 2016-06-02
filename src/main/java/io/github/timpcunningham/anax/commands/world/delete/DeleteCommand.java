@@ -2,6 +2,7 @@ package io.github.timpcunningham.anax.commands.world.delete;
 
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
+import com.sk89q.minecraft.util.commands.CommandPermissions;
 import io.github.timpcunningham.anax.exceptions.LocalizedCommandException;
 import io.github.timpcunningham.anax.utils.chat.Chat;
 import io.github.timpcunningham.anax.utils.chat.Lang;
@@ -18,6 +19,7 @@ public class DeleteCommand {
             desc = "Deletes a world!",
             min = 0, max = 0
     )
+    @CommandPermissions("anax.command.delete")
     public static void delete(CommandContext args, CommandSender sender) throws LocalizedCommandException {
         Player player = CommandUtils.validateAsPlayer(sender);
         AnaxWorld world = CommandUtils.validateWorldLoaded(sender, player.getWorld().getName());

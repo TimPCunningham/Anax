@@ -1,18 +1,16 @@
 package io.github.timpcunningham.anax.utils.server;
 
-import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.Query;
-import com.avaje.ebean.Transaction;
 import io.github.timpcunningham.anax.Anax;
 import io.github.timpcunningham.anax.player.AnaxPlayer;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;
 import io.github.timpcunningham.anax.world.RoleType;
 import io.github.timpcunningham.anax.world.tables.Flags;
-import io.github.timpcunningham.anax.world.tables.Role;
 import io.github.timpcunningham.anax.world.tables.Spawn;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -74,7 +72,8 @@ public class AnaxDatabase {
         Flags flags = (Flags)find(Flags.class).where().eq("worldName", world.getFullName()).findUnique();
 
         for(RoleType role : RoleType.values()) {
-            for (UUID uuid : world.getMemeberList(role)) {
+            Set<UUID> members = world.getMemeberList(role);
+            for (UUID uuid : members) {
                 world.removeMember(role, uuid);
             }
         }

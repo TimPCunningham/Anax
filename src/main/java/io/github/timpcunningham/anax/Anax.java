@@ -5,6 +5,7 @@ import com.sk89q.minecraft.util.commands.*;
 import io.github.timpcunningham.anax.commands.ChatCommands;
 import io.github.timpcunningham.anax.commands.MapCommands;
 import io.github.timpcunningham.anax.commands.confirm.Confrim;
+import io.github.timpcunningham.anax.commands.downlaod.DownloadCommand;
 import io.github.timpcunningham.anax.commands.flags.ToggleCommand;
 import io.github.timpcunningham.anax.commands.world.CreateCommand;
 import io.github.timpcunningham.anax.commands.world.MembersCommands;
@@ -76,6 +77,7 @@ public class Anax extends JavaPlugin {
         cmdRegister.register(Confrim.class);
         cmdRegister.register(CreateCommand.class);
         cmdRegister.register(DeleteCommand.class);
+        cmdRegister.register(DownloadCommand.class);
         cmdRegister.register(MapCommands.class);
         cmdRegister.register(MembersCommands.class);
         cmdRegister.register(ToggleCommand.class);

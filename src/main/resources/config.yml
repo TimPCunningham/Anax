@@ -1,2 +1,5 @@
 worlds:
   container: "/worlds/"
+dropbox:
+  token: "Token"
+  poll-interval: 2

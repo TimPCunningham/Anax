@@ -5,6 +5,9 @@ import io.github.timpcunningham.anax.exceptions.LocalizedPlayerException;
 import io.github.timpcunningham.anax.player.Channel;
 import io.github.timpcunningham.anax.utils.player.PlayerUtils;
 import io.github.timpcunningham.anax.utils.server.Debug;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -25,9 +28,19 @@ public class Chat {
         player.sendMessage(alert);
     }
 
+    public static void alertPlayer(Player player, BaseComponent component) {
+        player.spigot().sendMessage(component);
+    }
+
     public static void alertWorld(World world, Lang message, Object... args) {
         for(Player player : getReceivingList(Channel.WORLD, world)) {
             alertPlayer(player, message, Lang.FORMAT_WORLD_ALERT, args);
+        }
+    }
+
+    public static void alertWorld(World world, BaseComponent component) {
+        for(Player player : getReceivingList(Channel.WORLD, world)) {
+            alertPlayer(player, component);
         }
     }
 
@@ -36,6 +49,13 @@ public class Chat {
             alertPlayer(player, message, Lang.FORMAT_ADMIN_ALERT, args);
         }
         alertConsole(message, args);
+    }
+
+    public static void alertAdmin(BaseComponent component) {
+        for(Player player : getReceivingList(Channel.ADMIN, null)) {
+            alertPlayer(player, component);
+        }
+        alertConsole(component.toLegacyText());
     }
 
     public static void alertConsole(Lang message, Object... args) {

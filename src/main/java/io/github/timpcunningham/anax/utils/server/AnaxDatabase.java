@@ -31,7 +31,11 @@ public class AnaxDatabase {
     }
 
     public static AnaxWorld getWorldByShortName(String worldName) {
-        return Anax.get().getDatabase().find(AnaxWorld.class).where().eq("shortName", worldName).findUnique();
+        List<AnaxWorld> worlds = AnaxDatabase.getAnaxWorlds();
+
+        return worlds.stream()
+                .filter(world -> world.getShortName().equalsIgnoreCase(worldName.toLowerCase()))
+                .findFirst().get();
     }
 
     public static AnaxWorld getWorldByFullName(String worldName) {

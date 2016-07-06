@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Fuzzy {
-    static final int MATCH_THRESHOLD = 10;
+    static final int MATCH_THRESHOLD = 2;
 
 
     public static List<String> findMatches(String part, List<String> potential) {

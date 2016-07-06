@@ -2,6 +2,7 @@ package io.github.timpcunningham.anax.commands;
 
 import com.sk89q.bukkit.util.BukkitWrappedCommandSender;
 import com.sk89q.minecraft.util.commands.*;
+import io.github.timpcunningham.anax.utils.Fuzzy;
 import io.github.timpcunningham.anax.utils.chat.Chat;
 import io.github.timpcunningham.anax.exceptions.LocalizedCommandException;
 import io.github.timpcunningham.anax.exceptions.LocalizedException;
@@ -9,9 +10,11 @@ import io.github.timpcunningham.anax.utils.chat.Lang;
 import io.github.timpcunningham.anax.utils.command.MapPages;
 import io.github.timpcunningham.anax.utils.player.CommandUtils;
 import io.github.timpcunningham.anax.utils.server.AnaxDatabase;
+import io.github.timpcunningham.anax.utils.server.Debug;
 import io.github.timpcunningham.anax.utils.world.WorldUtils;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;
 import io.github.timpcunningham.anax.world.AnaxWorldManagement;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -58,44 +61,43 @@ public class MapCommands {
             usage = "<world>",
             min = 0, max = 1
     )
-    @CommandPermissions("anax.command.map")
+    @CommandPermissions("anax.tp")
     public static void map(CommandContext args, CommandSender sender) throws LocalizedCommandException, LocalizedException {
         Player player = CommandUtils.validateAsPlayer(sender);
-        List<AnaxWorld> worlds = AnaxWorldManagement.getInstance().getPlayerWorlds(player.getUniqueId());
-        AnaxWorld firstLoaded = null;
         AnaxWorldManagement manager = AnaxWorldManagement.getInstance();
 
-        if(worlds.size() > 0) {
-            firstLoaded = worlds.stream().filter(AnaxWorld::isLoaded).findFirst().get();
-        }
-
-        if(firstLoaded != null && args.argsLength() == 0) {
-            player.teleport(firstLoaded.getSpawn());
-        } else if(args.argsLength() == 0){
-            Chat.alertPlayer(player, Lang.SERVER_NOLOADEDMAPS, null);
-            Chat.alertPlayer(player, Lang.MESSAGE_DEFAULT, null, "/map <world>");
-        } else { //look for loaded map
-            AnaxWorld world = AnaxDatabase.getWorldByShortName(args.getString(0));
-
-            if(world == null) {
-                throw new LocalizedCommandException(sender, Lang.WORLD_NOT_FOUND, args.getString(0));
-            }
-
-            if(world.isLoaded()) { //if loaded get the loaded world from the manager
-                world = manager.getWorld(world.getFullName());
+        if(args.argsLength() == 0) {
+            List<AnaxWorld> worlds = AnaxWorldManagement.getInstance().getPlayerWorlds(player.getUniqueId());
+            if(worlds.size() > 0) {
+                AnaxWorld world = worlds.get(0);
+                player.teleport(world.getSpawn());
+                Chat.alertPlayer(player, Lang.COMMAND_MAP_TELEPORT, null, world.getShortName());
             } else {
-                world.retrieveData();
+                throw new LocalizedCommandException(player, Lang.SERVER_NOLOADEDMAPS);
+            }
+        } else {
+            List<String> worlds = manager.getCreatedWorldNames();
+            String match = Fuzzy.findBestMatch(args.getString(0), worlds);
+
+            if(match.equalsIgnoreCase("")) {
+                throw new LocalizedCommandException(player, Lang.WORLD_NOT_FOUND, args.getString(0));
             }
 
-            if(!WorldUtils.CanVisit(player, world)) {
-                throw new LocalizedCommandException(sender, Lang.WORLD_CANT_ACCESS);
-            }
+            AnaxWorld world = AnaxDatabase.getWorldByShortName(match);
+            world.setWorld(Bukkit.getWorld(world.getFullName()));
 
-            if(!world.isLoaded()) {
-                AnaxWorldManagement.getInstance().loadWorld(world);
+            if(world.isLoaded() || manager.isDefaultWorld(world)) {
+                world = manager.getWorld(world.getFullName());
+                player.teleport(world.getSpawn());
+            } else {
+                if(WorldUtils.CanVisit(player, world)) {
+                    manager.loadWorld(world);
+                    player.teleport(world.getSpawn());
+                } else {
+                    throw new LocalizedCommandException(player, Lang.WORLD_CANT_ACCESS);
+                }
             }
-
-            player.teleport(world.getSpawn());
+            Chat.alertPlayer(player, Lang.COMMAND_MAP_TELEPORT, null, world.getShortName());
         }
     }
 }

@@ -1,6 +1,7 @@
 package io.github.timpcunningham.anax.world.tables;
 
 import io.github.timpcunningham.anax.utils.server.AnaxDatabase;
+import io.github.timpcunningham.anax.utils.server.Debug;
 import io.github.timpcunningham.anax.utils.world.WorldUtils;
 import io.github.timpcunningham.anax.world.*;
 import io.github.timpcunningham.anax.world.Access;
@@ -97,10 +98,12 @@ public class AnaxWorld implements Comparable<AnaxWorld> {
         //Spawn defaults
         spawn.setWorldName(this.fullName);
         spawn.setX(0.5);
-        spawn.setY(0.5);
+        spawn.setY(1.5);
         spawn.setZ(0.5);
         spawn.setYaw(90);
         spawn.setPitch(0);
+
+        Debug.info(spawn.x + " " + spawn.y + " " + spawn.z);
 
         //Roles defaults
         for(RoleType type : RoleType.values()) {
@@ -147,7 +150,8 @@ public class AnaxWorld implements Comparable<AnaxWorld> {
      * @return returns the spawn as a Location
      */
     public Location getSpawn() {
-            return spawn.toLocation(this.getWorld());
+        Debug.info(spawn.x + " " + spawn.y + " " + spawn.z);
+        return spawn.toLocation(this.getWorld());
     }
 
     /**

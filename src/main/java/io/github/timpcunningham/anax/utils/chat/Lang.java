@@ -23,6 +23,9 @@ public enum Lang {
     COMMAND_DOWNLOAD_WAIT,
     COMMAND_ERROR_SENDER_NOT_PLAYER,
     COMMAND_MAPS_HEADER,
+    COMMAND_MAPS_MULTIOWNERS,
+    COMMAND_MAPS_NOOWNERS,
+    COMMAND_MAPS_NOWORLDS,
     COMMAND_REMOVEMEMBER_ALERT,
     COMMAND_REMOVEMEMBER_NOTROLE,
     COMMAND_REMOVEMEMBER_SUCCESS,
@@ -46,9 +49,10 @@ public enum Lang {
     SERVER_NOLOADEDMAPS,
     SERVER_WORLD_LOADED,
     SERVER_WORLD_LOAD_FAILED,
-    WORLD_CANT_ACCESS,
     WORLD_ALREADY_EXISTS,
     WORLD_ALREADY_LOADED,
+    WORLD_CANT_ACCESS,
+    WORLD_DEFAULT_DENY,
     WORLD_LOADED,
     WORLD_MANAGE_DENY,
     WORLD_NOT_FOUND,
@@ -64,7 +68,7 @@ public enum Lang {
         String res = langFile.getString(path);
 
         res = MessageFormat.format(res, args);
-        res = res.replace('`', '§');
+        res = res.replace('`', '\u00A7');
 
         return res;
     }

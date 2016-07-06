@@ -1,5 +1,27 @@
 worlds:
   container: "/worlds/"
+
+# token: Dropbox app token
+# poll-interval: Hours between checking for expired folders (24 hour expire time)
 dropbox:
   token: "Token"
   poll-interval: 2
+builder:
+  permissions:
+    worldedit.*: true
+    worldedit.reload: false
+    nbteditor.*: true
+    nbteditor.customitems.use.bos: true
+    nbteditor.customitems.use.bos-empty: true
+    nbteditor.customitems.use.entity-inspector: true
+    nbteditor.customitems.use.entity-remover: true
+    nbteditor.customitems.use.super-lead: true
+    astools.command: true
+    astools.use: true
+    astools.clone: true
+
+# period: Minutes the world is empty before being unloaded
+# poll-interval: Minutes between checking for worlds to be unloaded
+unload:
+  period: 30
+  poll-interval: 10

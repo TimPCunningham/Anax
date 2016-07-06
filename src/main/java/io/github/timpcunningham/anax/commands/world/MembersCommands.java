@@ -3,6 +3,7 @@ package io.github.timpcunningham.anax.commands.world;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
+import io.github.timpcunningham.anax.events.PermissionChangedEvent;
 import io.github.timpcunningham.anax.exceptions.LocalizedCommandException;
 import io.github.timpcunningham.anax.exceptions.LocalizedException;
 import io.github.timpcunningham.anax.player.AnaxPlayer;
@@ -57,7 +58,7 @@ public class MembersCommands {
         if(target.getPlayer() != null) {
             Chat.alertPlayer(target.getPlayer(), Lang.COMMAND_ADD_ALERT, Lang.FORMAT_GLOBAL_ALERT, role.name(), world.getShortName());
             if(target.getPlayer().getWorld().getName().equals(world.getFullName())) {
-                //TODO: Change perms if they are in the world
+                Bukkit.getServer().getPluginManager().callEvent(new PermissionChangedEvent(player, world));
             }
         }
     }
@@ -96,7 +97,7 @@ public class MembersCommands {
         if(target.getPlayer() != null) {
             Chat.alertPlayer(target.getPlayer(), Lang.COMMAND_REMOVEMEMBER_ALERT, Lang.FORMAT_GLOBAL_ALERT, roleType.name(), world.getShortName());
             if(target.getPlayer().getWorld().getName().equals(world.getFullName())) {
-                //TODO: Change perms if they are in the world
+                Bukkit.getServer().getPluginManager().callEvent(new PermissionChangedEvent(player, world));
             }
         }
     }

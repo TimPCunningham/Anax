@@ -11,9 +11,13 @@ import io.github.timpcunningham.anax.commands.world.CreateCommand;
 import io.github.timpcunningham.anax.commands.world.MembersCommands;
 import io.github.timpcunningham.anax.commands.world.delete.DeleteCommand;
 import io.github.timpcunningham.anax.listeners.ChatListener;
+import io.github.timpcunningham.anax.listeners.PermissionListener;
 import io.github.timpcunningham.anax.listeners.Playerlisteners;
+import io.github.timpcunningham.anax.listeners.UnloadListener;
 import io.github.timpcunningham.anax.player.AnaxPlayer;
 import io.github.timpcunningham.anax.player.AnaxPlayerManager;
+import io.github.timpcunningham.anax.utils.chat.ComponentBuilder;
+import io.github.timpcunningham.anax.utils.server.Debug;
 import io.github.timpcunningham.anax.utils.world.WorldUtils;
 import io.github.timpcunningham.anax.world.AnaxWorldManagement;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;
@@ -25,17 +29,24 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.persistence.PersistenceException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Anax extends JavaPlugin {
     private static Anax self;
     private CommandsManager<CommandSender> commands;
+    private Permission builderPermission;
+    private UnloadListener unloadListener;
 
     @Override
     public void onLoad() {
@@ -46,16 +57,23 @@ public class Anax extends JavaPlugin {
     public void onEnable() {
         getConfig().options().copyDefaults(true);
         saveConfig();
+
+        loadBuilderPermissions();
+
+        int poll = getConfig().getInt("unload.poll-interval") * 20 * 60;
+        unloadListener = UnloadListener.getInstance();
+        unloadListener.runTaskTimer(this, poll, poll);
+
         setupDatabase();
         setupCommands();
         setupListeners();
+
         AnaxPlayerManager.getInstance().createServerPlayer();
         WorldUtils.loadAllWorlds();
     }
 
     @Override
     public void onDisable() {
-        AnaxPlayerManager.getInstance().saveAll();
         AnaxWorldManagement.getInstance().unloadAll();
     }
 
@@ -85,7 +103,9 @@ public class Anax extends JavaPlugin {
 
     public void setupListeners() {
         Bukkit.getPluginManager().registerEvents(new ChatListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PermissionListener(), this);
         Bukkit.getPluginManager().registerEvents(new Playerlisteners(), this);
+        Bukkit.getPluginManager().registerEvents(unloadListener, this);
     }
 
     private void setupDatabase() {
@@ -143,5 +163,20 @@ public class Anax extends JavaPlugin {
 
     public String getWorldBasePath() {
         return Bukkit.getWorldContainer().getPath() +  getConfig().getString("worlds.container");
+    }
+
+    public void loadBuilderPermissions() {
+        ConfigurationSection section = getConfig().getConfigurationSection("builder.permissions");
+        Map<String, Boolean> childern = new HashMap<>();
+
+        for(String key : section.getKeys(false)) {
+            childern.put(key, section.getBoolean(key, false));
+        }
+
+        builderPermission = new Permission("anax.world.builder", "World builder building permission", PermissionDefault.FALSE, childern);
+    }
+
+    public Permission getBuilderPermission() {
+        return this.builderPermission;
     }
 }

@@ -1,6 +1,5 @@
 package io.github.timpcunningham.anax.player;
 
-import io.github.timpcunningham.anax.Anax;
 import io.github.timpcunningham.anax.utils.server.AnaxDatabase;
 import io.github.timpcunningham.anax.world.AnaxWorldManagement;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;

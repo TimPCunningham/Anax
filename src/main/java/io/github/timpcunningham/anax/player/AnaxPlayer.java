@@ -89,6 +89,5 @@ public class AnaxPlayer {
     public void setJoins(int joins) {
         this.joins = joins;
     }
-
     //endregion
 }

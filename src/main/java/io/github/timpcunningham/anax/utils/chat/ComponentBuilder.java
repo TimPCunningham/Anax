@@ -23,7 +23,7 @@ public class ComponentBuilder {
         return this;
     }
 
-    public  ComponentBuilder text(String text) {
+    public ComponentBuilder text(String text) {
         component.setText(text);
         return this;
     }

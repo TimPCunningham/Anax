@@ -27,6 +27,10 @@ public class AnaxWorldManagement {
         return self;
     }
 
+    public List<String> getCreatedWorldNames() {
+        return AnaxDatabase.getAnaxWorlds().stream().map(AnaxWorld::getShortName).collect(Collectors.toList());
+    }
+
     public Collection<AnaxWorld> getWorlds() {
         return loadedWorlds.values();
     }
@@ -91,6 +95,10 @@ public class AnaxWorldManagement {
 
     public AnaxWorld getDefaultWorld() {
         return loadedWorlds.get(Bukkit.getWorlds().get(0).getName());
+    }
+
+    public boolean isDefaultWorld(AnaxWorld world) {
+        return world.getFullName().equalsIgnoreCase(Bukkit.getWorlds().get(0).getName());
     }
 
     public void setupDefaultWorld() {

@@ -21,23 +21,20 @@ import java.util.UUID;
 public class WorldUtils {
 
     public static void assertCanManage(Player player, AnaxWorld world) throws LocalizedCommandException {
-        if(!world.isRole(RoleType.OWNER, player.getUniqueId())) {
+        if(!world.isRole(RoleType.OWNER, player.getUniqueId()) && !player.hasPermission("anax.world.manage.all")) {
             throw new LocalizedCommandException(player, Lang.WORLD_MANAGE_DENY);
         }
-    }
-
-    public static boolean CanBuild(Player player, AnaxWorld world) {
-        UUID uuid = player.getUniqueId();
-        return  world.isRole(RoleType.OWNER, uuid) ||
-                world.isRole(RoleType.BUILDER, uuid);
+        if(AnaxWorldManagement.getInstance().isDefaultWorld(world)) {
+            throw new LocalizedCommandException(player, Lang.WORLD_DEFAULT_DENY);
+        }
     }
 
     public static boolean CanVisit(Player player, AnaxWorld world) {
         UUID uuid = player.getUniqueId();
-        if(world.getAccess().equals(Access.PUBLIC)) {
+        if(world.getAccess().equals(Access.PUBLIC) || player.hasPermission("anax.tp.all")) {
             return true;
         } else {
-            return  world.isRole(RoleType.OWNER, uuid)  ||
+            return  world.isRole(RoleType.OWNER, uuid)   ||
                     world.isRole(RoleType.BUILDER, uuid) ||
                     world.isRole(RoleType.VISITOR, uuid);
         }

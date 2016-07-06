@@ -7,6 +7,7 @@ import io.github.timpcunningham.anax.world.Access;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import javax.persistence.*;
 import java.util.*;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
  * AnaxWorld - Holds information regarding a world and its settings
  */
 @Entity
-public class AnaxWorld {
+public class AnaxWorld implements Comparable<AnaxWorld> {
 
     @Id
     private String fullName;
@@ -230,6 +231,14 @@ public class AnaxWorld {
         return  ChatColor.LIGHT_PURPLE + this.shortName + " by " + WorldUtils.uuidsToListing(owners);
     }
 
+    public boolean canBuild(Player player) {
+        UUID uuid = player.getUniqueId();
+        return  isRole(RoleType.OWNER, uuid) ||
+                isRole(RoleType.BUILDER, uuid);
+    }
+
+
+
     /**
      * ===============================================================================================================
      * Database required methods
@@ -282,5 +291,10 @@ public class AnaxWorld {
 
     public void setLoaded(boolean loaded) {
         this.loaded = loaded;
+    }
+
+    @Override
+    public int compareTo(AnaxWorld o) {
+        return this.getShortName().toLowerCase().compareTo(o.getShortName().toLowerCase());
     }
 }

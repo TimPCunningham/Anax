@@ -34,7 +34,12 @@ public class CreateCommand {
         }
 
         Player player = CommandUtils.validateAsPlayer(sender);
-        //TODO - Add check for worlds created
+        int current = PlayerUtils.getCurrentWorldCount(player);
+        int max = PlayerUtils.getMaxWorlds(player);
+
+        if(!(current < max)) {
+            throw new LocalizedCommandException(player, Lang.COMMAND_CREATE_TOOMANY);
+        }
 
         try {
             AnaxWorld world = AnaxWorldManagement.getInstance().createWorld(args.getString(0), player.getUniqueId());

@@ -2,7 +2,7 @@ worlds:
   container: "/worlds/"
 
 # token: Dropbox app token
-# poll-interval: Hours between checking for expired folders (24 hour expire time)
+# poll-interval: Hours between checking for expired folders (3 day expire time)
 dropbox:
   token: "Token"
   poll-interval: 2

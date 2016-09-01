@@ -44,7 +44,6 @@ public class CreateCommand {
         try {
             AnaxWorld world = AnaxWorldManagement.getInstance().createWorld(args.getString(0), player.getUniqueId());
             world.addMemeber(RoleType.OWNER, player.getUniqueId());
-            AnaxDatabase.save(world);
             UnloadListener.getInstance().add(world.getFullName());
         } catch (LocalizedException e) {
             Chat.alertPlayer(player, e.getReason(), null, e.getArgs());

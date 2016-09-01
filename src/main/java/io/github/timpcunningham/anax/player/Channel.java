@@ -19,7 +19,7 @@ public enum Channel {
     }
 
     public String format(String sender, String message) {
-        return MessageFormat.format(this.format, sender, message).replace('`','§');
+        return MessageFormat.format(this.format, sender, message).replace('`','\u00A7');
     }
 
     public String getPermission() {

@@ -9,6 +9,7 @@ import io.github.timpcunningham.anax.utils.player.CommandUtils;
 import io.github.timpcunningham.anax.utils.chat.Lang;
 import io.github.timpcunningham.anax.utils.player.PlayerUtils;
 import io.github.timpcunningham.anax.utils.world.WorldUtils;
+import io.github.timpcunningham.anax.world.AnaxWorldManagement;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;
 import io.github.timpcunningham.anax.world.FlagType;
 import io.github.timpcunningham.anax.world.tables.Flags;
@@ -35,6 +36,10 @@ public class ToggleCommand {
 
         WorldUtils.assertCanManage(player, world);
 
+        if(AnaxWorldManagement.getInstance().isDefaultWorld(world)) {
+            throw new LocalizedCommandException(player, Lang.WORLD_DEFAULT_DENY);
+        }
+
         boolean result = world.toggleFlag(flag);
         ChatColor resultColor;
 
@@ -57,7 +62,6 @@ public class ToggleCommand {
     @CommandPermissions("anax.command.flags")
     public static void flags(CommandContext args, CommandSender sender) throws LocalizedCommandException {
         Player player = CommandUtils.validateAsPlayer(sender);
-        String locale = PlayerUtils.getLocale(player);
         AnaxWorld world = CommandUtils.validateWorldLoaded(sender, player.getWorld().getName());
 
         if(args.argsLength() == 1 && args.getString(0).toLowerCase().equals("help")) {

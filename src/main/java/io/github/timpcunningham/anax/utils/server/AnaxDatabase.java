@@ -48,7 +48,10 @@ public class AnaxDatabase {
     }
 
     public static boolean isWorld(String worldName) {
-        return Anax.get().getDatabase().find(AnaxWorld.class).where().eq("shortName", worldName).findRowCount() > 0;
+
+        return Anax.get().getDatabase().find(AnaxWorld.class).findList()
+                .stream().filter(world -> world.getShortName().equalsIgnoreCase(worldName))
+                .count() > 0;
     }
 
     public static AnaxPlayer getAnaxPlayer(UUID uuid) {

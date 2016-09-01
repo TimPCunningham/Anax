@@ -24,9 +24,6 @@ public class WorldUtils {
         if(!world.isRole(RoleType.OWNER, player.getUniqueId()) && !player.hasPermission("anax.world.manage.all")) {
             throw new LocalizedCommandException(player, Lang.WORLD_MANAGE_DENY);
         }
-        if(AnaxWorldManagement.getInstance().isDefaultWorld(world)) {
-            throw new LocalizedCommandException(player, Lang.WORLD_DEFAULT_DENY);
-        }
     }
 
     public static boolean CanVisit(Player player, AnaxWorld world) {

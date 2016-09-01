@@ -61,10 +61,10 @@ public class AnaxWorld implements Comparable<AnaxWorld> {
         } catch (Exception e) {
             this.spawn = new Spawn();
         }
-
-        Flags dbFlags = (Flags) AnaxDatabase.find(Flags.class).where().eq("world", this.fullName).findUnique();
-        if(dbFlags != null) {
-            flags = dbFlags;
+        try {
+            this.flags = (Flags) AnaxDatabase.find(Flags.class).where().eq("worldName", this.fullName).findUnique();
+        } catch (Exception e ) {
+            this.flags = new Flags();
         }
 
         for(RoleType type : RoleType.values()) {
@@ -85,7 +85,6 @@ public class AnaxWorld implements Comparable<AnaxWorld> {
                 AnaxDatabase.update(role);
             }
         }
-
         AnaxDatabase.update(flags);
     }
 
@@ -102,8 +101,6 @@ public class AnaxWorld implements Comparable<AnaxWorld> {
         spawn.setZ(0.5);
         spawn.setYaw(90);
         spawn.setPitch(0);
-
-        Debug.info(spawn.x + " " + spawn.y + " " + spawn.z);
 
         //Roles defaults
         for(RoleType type : RoleType.values()) {

@@ -127,19 +127,13 @@ public class FlagListeners implements Listener {
     }
     //endregion
 
-    //region Monster Event
-    @EventHandler
-    public void hostileSpawn(CreatureSpawnEvent event) {
-        boolean result = EventUtils.event(FlagType.MONSTERS, event.getEntity().getWorld());
-        event.setCancelled(result && isHostile(event.getEntity()));
-    }
-    //endregion
-
     //region Animals Event
     @EventHandler
-    public void passiveSpawn(CreatureSpawnEvent event) {
-        boolean result = EventUtils.event(FlagType.ANIMALS, event.getEntity().getWorld());
-        event.setCancelled(result && isPassive(event.getEntity()));
+    public void creatureSpawn(CreatureSpawnEvent event) {
+        boolean passiveResult = EventUtils.event(FlagType.ANIMALS, event.getEntity().getWorld());
+        boolean hostileResult = EventUtils.event(FlagType.MONSTERS, event.getEntity().getWorld());
+
+        event.setCancelled((passiveResult && isPassive(event.getEntity())) || (hostileResult && isHostile(event.getEntity())));
     }
     //endregion
 

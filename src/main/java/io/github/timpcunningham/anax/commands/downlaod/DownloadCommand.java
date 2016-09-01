@@ -37,6 +37,11 @@ public class DownloadCommand {
         AnaxWorld world = CommandUtils.validateWorldLoaded(sender, player.getWorld().getName());
 
         WorldUtils.assertCanManage(player, world);
+
+        if(!Dropbox.getInstance().isSupported()) {
+            throw new LocalizedCommandException(sender, Lang.COMMAND_DOWNLOAD_NOSUPPORT);
+        }
+
         world.getWorld().save();
         Chat.alertPlayer(player, Lang.COMMAND_DOWNLOAD_WAIT, Lang.FORMAT_GLOBAL_ALERT);
 

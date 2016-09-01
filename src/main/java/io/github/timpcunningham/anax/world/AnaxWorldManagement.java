@@ -46,6 +46,12 @@ public class AnaxWorldManagement {
         return loadedWorlds.get(worldName);
     }
 
+    public AnaxWorld getWorldByShortName(String worldName) {
+        return loadedWorlds.values().stream()
+                .filter(world -> world.getShortName().equalsIgnoreCase(worldName))
+                .findFirst().get();
+    }
+
     public boolean isLoadedWorld(String worldName) {
         return loadedWorlds.containsKey(worldName);
     }
@@ -85,7 +91,10 @@ public class AnaxWorldManagement {
         world.setFullName(fullPath);
         world.setDefaults();
 
-        return loadWorld(world);
+        world = loadWorld(world);
+        AnaxDatabase.save(world);
+
+        return world;
     }
 
     public void unloadAll() {

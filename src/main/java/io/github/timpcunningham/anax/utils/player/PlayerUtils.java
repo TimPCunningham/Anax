@@ -53,6 +53,10 @@ public class PlayerUtils {
         String path = Anax.get().getWorldBasePath() + player.getUniqueId() + "/";
         File file = new File(path);
 
+        if(!file.exists()) {
+            file.mkdirs();
+        }
+
         try {
             return file.listFiles().length;
         } catch (NullPointerException e) {

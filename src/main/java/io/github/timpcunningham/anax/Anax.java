@@ -6,14 +6,13 @@ import io.github.timpcunningham.anax.commands.ChatCommands;
 import io.github.timpcunningham.anax.commands.MapCommands;
 import io.github.timpcunningham.anax.commands.confirm.Confrim;
 import io.github.timpcunningham.anax.commands.downlaod.DownloadCommand;
+import io.github.timpcunningham.anax.commands.downlaod.Dropbox;
 import io.github.timpcunningham.anax.commands.flags.ToggleCommand;
+import io.github.timpcunningham.anax.commands.importing.ImportCommand;
 import io.github.timpcunningham.anax.commands.world.CreateCommand;
 import io.github.timpcunningham.anax.commands.world.MembersCommands;
 import io.github.timpcunningham.anax.commands.world.delete.DeleteCommand;
-import io.github.timpcunningham.anax.listeners.ChatListener;
-import io.github.timpcunningham.anax.listeners.PermissionListener;
-import io.github.timpcunningham.anax.listeners.Playerlisteners;
-import io.github.timpcunningham.anax.listeners.UnloadListener;
+import io.github.timpcunningham.anax.listeners.*;
 import io.github.timpcunningham.anax.player.AnaxPlayer;
 import io.github.timpcunningham.anax.player.AnaxPlayerManager;
 import io.github.timpcunningham.anax.utils.chat.ComponentBuilder;
@@ -60,9 +59,11 @@ public class Anax extends JavaPlugin {
 
         loadBuilderPermissions();
 
-        int poll = getConfig().getInt("unload.poll-interval") * 20 * 60;
+        int unload_poll = getConfig().getInt("unload.poll-interval",10) * 20 * 60;
+        int dropbox_poll = getConfig().getInt("dropbox.poll-interval", 2) * 20 * 60 * 60;
         unloadListener = UnloadListener.getInstance();
-        unloadListener.runTaskTimer(this, poll, poll);
+        unloadListener.runTaskTimer(this, unload_poll , unload_poll );
+        Dropbox.getInstance().runTaskTimerAsynchronously(this, dropbox_poll, dropbox_poll);
 
         setupDatabase();
         setupCommands();
@@ -96,6 +97,7 @@ public class Anax extends JavaPlugin {
         cmdRegister.register(CreateCommand.class);
         cmdRegister.register(DeleteCommand.class);
         cmdRegister.register(DownloadCommand.class);
+        cmdRegister.register(ImportCommand.class);
         cmdRegister.register(MapCommands.class);
         cmdRegister.register(MembersCommands.class);
         cmdRegister.register(ToggleCommand.class);
@@ -103,6 +105,7 @@ public class Anax extends JavaPlugin {
 
     public void setupListeners() {
         Bukkit.getPluginManager().registerEvents(new ChatListener(), this);
+        Bukkit.getPluginManager().registerEvents(new FlagListeners(), this);
         Bukkit.getPluginManager().registerEvents(new PermissionListener(), this);
         Bukkit.getPluginManager().registerEvents(new Playerlisteners(), this);
         Bukkit.getPluginManager().registerEvents(unloadListener, this);
@@ -169,8 +172,10 @@ public class Anax extends JavaPlugin {
         ConfigurationSection section = getConfig().getConfigurationSection("builder.permissions");
         Map<String, Boolean> childern = new HashMap<>();
 
-        for(String key : section.getKeys(false)) {
-            childern.put(key, section.getBoolean(key, false));
+        for(String key : section.getKeys(true)) {
+            if(section.getConfigurationSection(key) == null) {
+                childern.put(key, section.getBoolean(key, false));
+            }
         }
 
         builderPermission = new Permission("anax.world.builder", "World builder building permission", PermissionDefault.FALSE, childern);

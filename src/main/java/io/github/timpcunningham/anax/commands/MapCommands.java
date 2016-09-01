@@ -84,7 +84,6 @@ public class MapCommands {
             }
 
             AnaxWorld world = AnaxDatabase.getWorldByShortName(match);
-            world.setWorld(Bukkit.getWorld(world.getFullName()));
 
             if(world.isLoaded() || manager.isDefaultWorld(world)) {
                 world = manager.getWorld(world.getFullName());
@@ -97,7 +96,72 @@ public class MapCommands {
                     throw new LocalizedCommandException(player, Lang.WORLD_CANT_ACCESS);
                 }
             }
+
+            world.setWorld(Bukkit.getWorld(world.getFullName()));
             Chat.alertPlayer(player, Lang.COMMAND_MAP_TELEPORT, null, world.getShortName());
         }
+    }
+
+    @Command(
+            aliases = {"load"},
+            desc = "Loads a world",
+            usage = "<world>",
+            min = 1, max = 1
+    )
+    @CommandPermissions("anax.command.load")
+    public static void load(CommandContext args, CommandSender sender) throws LocalizedCommandException {
+        Player player = CommandUtils.validateAsPlayer(sender);
+        AnaxWorldManagement manger = AnaxWorldManagement.getInstance();
+        String worldName = Fuzzy.findBestMatch(args.getString(0), manger.getCreatedWorldNames());
+
+        if(worldName.equalsIgnoreCase("")) {
+            throw new LocalizedCommandException(player, Lang.WORLD_NOT_FOUND, args.getString(0));
+        }
+
+        AnaxWorld world = AnaxDatabase.getWorldByShortName(worldName);
+        if(world.isLoaded() || manger.isDefaultWorld(world)) {
+            throw new LocalizedCommandException(player, Lang.WORLD_ALREADY_LOADED, world.getShortName());
+        }
+
+        world.retrieveData();
+        WorldUtils.assertCanManage(player, world);
+
+        try {
+            manger.loadWorld(world);
+            AnaxDatabase.update(world);
+            Chat.alertPlayer(player, Lang.WORLD_LOADED, null, world.getShortName());
+        } catch (LocalizedException e) {
+            throw new LocalizedCommandException(player, e.getReason(), e.getArgs());
+        }
+    }
+
+    @Command(
+            aliases = {"unload"},
+            desc = "Unloads a world",
+            usage = "<world>",
+            min = 1, max = 1
+    )
+    @CommandPermissions("anax.command.unload")
+    public static void unload(CommandContext args, CommandSender sender) throws LocalizedCommandException {
+        Player player = CommandUtils.validateAsPlayer(sender);
+        AnaxWorldManagement manager = AnaxWorldManagement.getInstance();
+        String worldName = Fuzzy.findBestMatch(args.getString(0), manager.getWorlds().stream().map(AnaxWorld::getShortName).collect(Collectors.toList()));
+
+        if(worldName.equalsIgnoreCase("")) {
+            throw new LocalizedCommandException(player, Lang.WORLD_NOT_FOUND, args.getString(0));
+        }
+
+        AnaxWorld world = manager.getWorldByShortName(worldName);
+        if(manager.isDefaultWorld(world)) {
+            throw new LocalizedCommandException(player, Lang.WORLD_DEFAULT_DENY);
+        }
+
+        WorldUtils.assertCanManage(player, world);
+        if(!world.isLoaded()) {
+            throw new LocalizedCommandException(player, Lang.WORLD_NOT_LOADED, args.getString(0));
+        }
+
+        manager.unloadWorld(world);
+        Chat.alertPlayer(player, Lang.WORLD_UNLOADED, null, world.getShortName());
     }
 }

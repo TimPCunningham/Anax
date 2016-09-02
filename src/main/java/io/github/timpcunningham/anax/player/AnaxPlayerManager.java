@@ -1,5 +1,6 @@
 package io.github.timpcunningham.anax.player;
 
+import io.github.timpcunningham.anax.utils.chat.Chat;
 import io.github.timpcunningham.anax.utils.server.AnaxDatabase;
 import io.github.timpcunningham.anax.world.AnaxWorldManagement;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;
@@ -97,7 +98,11 @@ public class AnaxPlayerManager {
         AnaxWorld hub = AnaxWorldManagement.getInstance().getDefaultWorld();
 
         for(Player player : world.getWorld().getPlayers()) {
-            player.teleport(hub.getSpawn());
+            try {
+                player.teleport(hub.getSpawn());
+            } catch (Exception e) {
+                Chat.alertConsole("Couldn't teleport " + player.getName() + " to the hub!");
+            }
         }
     }
 }

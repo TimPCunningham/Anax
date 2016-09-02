@@ -133,7 +133,14 @@ public class Dropbox extends BukkitRunnable {
             InputStream in = new FileInputStream(path);
             FileMetadata metadata = client.files().uploadBuilder("/downloads/" + world + ".zip")
                     .withMode(WriteMode.OVERWRITE).uploadAndFinish(in);
-            String url = client.sharing().createSharedLinkWithSettings(metadata.getPathDisplay()).getUrl();
+
+            String url;
+
+            try {
+                url = client.sharing().createSharedLinkWithSettings(metadata.getPathDisplay()).getUrl();
+            } catch (Exception e) {
+                url = client.sharing().listSharedLinksBuilder().withPath(metadata.getPathDisplay()).withDirectOnly(true).start().getLinks().get(0).getUrl();
+            }
 
             in.close();
             callback.execute(player, url, path);

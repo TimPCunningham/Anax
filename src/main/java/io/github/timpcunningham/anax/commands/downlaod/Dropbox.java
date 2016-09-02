@@ -58,7 +58,7 @@ public class Dropbox extends BukkitRunnable {
             //wePlugin = (WorldEditPlugin) Bukkit.getPluginManager().getPlugin("WorldEdit");
             //canPrune = true;
         } catch (Exception e) {
-            Debug.server("Could not find WorldEdit! Pruning disabled!");
+            Debug.severe("Could not find WorldEdit! Pruning disabled!");
         }
     }
 

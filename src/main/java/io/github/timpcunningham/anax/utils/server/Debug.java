@@ -17,6 +17,10 @@ public class Debug {
        sender.sendMessage(DEBUG_HEADER + caller() + message);
     }
 
+    public static void simple(String message) {
+        Bukkit.broadcastMessage( ChatColor.GRAY + message);
+    }
+
     public static void warning(String message) {
         Anax.get().getLogger().warning(DEBUG_HEADER + caller() + message);
     }
@@ -25,13 +29,15 @@ public class Debug {
         Anax.get().getLogger().info(DEBUG_HEADER + caller() + message);
     }
 
-    public static void server(String message) {
+    public static void severe(String message) {
         Anax.get().getLogger().severe(DEBUG_HEADER + caller() + message);
     }
 
     public static void ops(String message) {
         for(Player player : Bukkit.getOnlinePlayers()) {
-            player.sendMessage(DEBUG_HEADER + caller() + message);
+            if(player.isOp()) {
+                player.sendMessage(DEBUG_HEADER + caller() + message);
+            }
         }
     }
 

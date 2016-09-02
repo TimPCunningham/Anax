@@ -120,11 +120,13 @@ public class AnaxWorldManagement {
             world.setFullName(Bukkit.getWorlds().get(0).getName());
             world.setShortName("Hub");
             world.setDefaults();
+            world.setLoaded(false);
             world.setLocked(true);
             world.addMemeber(RoleType.OWNER, AnaxPlayerManager.getInstance().getServerAsPlayer().getUuid());
             AnaxDatabase.save(world);
         } else {
             world.retrieveData();
+            world.setWorld(Bukkit.getWorlds().get(0));
         }
         loadedWorlds.put(world.getFullName(), world);
     }

@@ -36,10 +36,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import javax.persistence.PersistenceException;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Anax extends JavaPlugin {
     private static Anax self;
@@ -129,8 +126,10 @@ public class Anax extends JavaPlugin {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+        String[] _args = checkDebug(args);
+
         try {
-            this.commands.execute(cmd.getName(), args, sender, sender);
+            this.commands.execute(cmd.getName(), _args, sender, sender);
         } catch (CommandPermissionsException e) {
             sender.sendMessage(ChatColor.RED + "You don't have permission.");
         } catch (MissingNestedCommandException e) {
@@ -143,6 +142,10 @@ public class Anax extends JavaPlugin {
                 sender.sendMessage(ChatColor.RED + "Number expected, string received instead.");
             } else {
                 sender.sendMessage(ChatColor.RED + e.getCause().getMessage());
+
+                if(debug) {
+                    e.printStackTrace();
+                }
             }
         } catch (CommandException e) {
             sender.sendMessage(ChatColor.RED + e.getMessage());
@@ -150,6 +153,21 @@ public class Anax extends JavaPlugin {
         }
         return true;
     }
+
+    boolean debug = false;
+
+    private String[] checkDebug(String[] args) {
+        List<String> result = new ArrayList<>(Arrays.asList(args));
+        debug = false;
+
+        if(result.contains("--debug")) {
+            result.remove("--debug");
+            debug = true;
+        }
+
+        return result.toArray(new String[result.size()]);
+    }
+
 
     @Override
     public List<Class<?>> getDatabaseClasses() {

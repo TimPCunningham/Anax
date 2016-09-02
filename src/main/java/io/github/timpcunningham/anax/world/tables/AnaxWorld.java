@@ -235,7 +235,8 @@ public class AnaxWorld implements Comparable<AnaxWorld> {
     public boolean canBuild(Player player) {
         UUID uuid = player.getUniqueId();
         return  isRole(RoleType.OWNER, uuid) ||
-                isRole(RoleType.BUILDER, uuid);
+                isRole(RoleType.BUILDER, uuid) ||
+                player.hasPermission("anax.admin");
     }
 
 

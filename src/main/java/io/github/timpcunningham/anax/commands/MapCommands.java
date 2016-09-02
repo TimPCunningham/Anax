@@ -1,5 +1,6 @@
 package io.github.timpcunningham.anax.commands;
 
+import com.dropbox.core.v2.team.DevicesActive;
 import com.sk89q.bukkit.util.BukkitWrappedCommandSender;
 import com.sk89q.minecraft.util.commands.*;
 import io.github.timpcunningham.anax.utils.Fuzzy;
@@ -62,7 +63,7 @@ public class MapCommands {
             min = 0, max = 1
     )
     @CommandPermissions("anax.tp")
-    public static void map(CommandContext args, CommandSender sender) throws LocalizedCommandException, LocalizedException {
+    public static void map(CommandContext args, CommandSender sender) throws  LocalizedException {
         Player player = CommandUtils.validateAsPlayer(sender);
         AnaxWorldManagement manager = AnaxWorldManagement.getInstance();
 
@@ -91,13 +92,13 @@ public class MapCommands {
             } else {
                 if(WorldUtils.CanVisit(player, world)) {
                     manager.loadWorld(world);
+                    world.setWorld(Bukkit.getWorld(world.getFullName()));
                     player.teleport(world.getSpawn());
                 } else {
                     throw new LocalizedCommandException(player, Lang.WORLD_CANT_ACCESS);
                 }
             }
 
-            world.setWorld(Bukkit.getWorld(world.getFullName()));
             Chat.alertPlayer(player, Lang.COMMAND_MAP_TELEPORT, null, world.getShortName());
         }
     }

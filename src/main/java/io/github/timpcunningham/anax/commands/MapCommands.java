@@ -1,8 +1,8 @@
 package io.github.timpcunningham.anax.commands;
 
-import com.dropbox.core.v2.team.DevicesActive;
 import com.sk89q.bukkit.util.BukkitWrappedCommandSender;
 import com.sk89q.minecraft.util.commands.*;
+import io.github.timpcunningham.anax.events.PermissionChangedEvent;
 import io.github.timpcunningham.anax.utils.Fuzzy;
 import io.github.timpcunningham.anax.utils.chat.Chat;
 import io.github.timpcunningham.anax.exceptions.LocalizedCommandException;
@@ -11,7 +11,6 @@ import io.github.timpcunningham.anax.utils.chat.Lang;
 import io.github.timpcunningham.anax.utils.command.MapPages;
 import io.github.timpcunningham.anax.utils.player.CommandUtils;
 import io.github.timpcunningham.anax.utils.server.AnaxDatabase;
-import io.github.timpcunningham.anax.utils.server.Debug;
 import io.github.timpcunningham.anax.utils.world.WorldUtils;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;
 import io.github.timpcunningham.anax.world.AnaxWorldManagement;
@@ -164,5 +163,47 @@ public class MapCommands {
 
         manager.unloadWorld(world);
         Chat.alertPlayer(player, Lang.WORLD_UNLOADED, null, world.getShortName());
+    }
+
+    @Command(
+            aliases = {"lock"},
+            desc = "Locks the current world",
+            min = 0, max = 0
+    )
+    @CommandPermissions("anax.command.lock")
+    public static void lock(CommandContext args, CommandSender sender) throws LocalizedCommandException {
+        changeLockStatus(sender, true, Lang.COMMAND_LOCK_SUCCESS, Lang.COMMAND_LOCK_ERROR);
+    }
+
+    @Command(
+            aliases = {"unlock"},
+            desc = "Unocks the current world",
+            min = 0, max = 0
+    )
+    @CommandPermissions("anax.command.unlock")
+    public static void unlock(CommandContext args, CommandSender sender) throws LocalizedCommandException {
+        changeLockStatus(sender, false, Lang.COMMAND_UNLOCK_SUCCESS, Lang.COMMAND_UNLOCK_ERROR);
+    }
+
+    private static void changeLockStatus(CommandSender sender, boolean status, Lang success, Lang fail) throws LocalizedCommandException {
+        Player player = CommandUtils.validateAsPlayer(sender);
+        AnaxWorld world = CommandUtils.validateWorldLoaded(sender, player.getWorld().getName());
+
+        WorldUtils.assertCanManage(player, world);
+
+        if(AnaxWorldManagement.getInstance().isDefaultWorld(world)) {
+            throw new LocalizedCommandException(player, Lang.WORLD_DEFAULT_DENY);
+        }
+
+        if(world.isLocked() == status) {
+            throw new LocalizedCommandException(player, fail);
+        }
+
+        world.setLocked(status);
+        Chat.alertPlayer(player, success, null);
+
+        for(Player inWorld : world.getWorld().getPlayers()) {
+            Bukkit.getServer().getPluginManager().callEvent(new PermissionChangedEvent(inWorld, world));
+        }
     }
 }

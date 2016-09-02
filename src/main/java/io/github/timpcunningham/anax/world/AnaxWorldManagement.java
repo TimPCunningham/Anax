@@ -98,7 +98,8 @@ public class AnaxWorldManagement {
     }
 
     public void unloadAll() {
-        for(AnaxWorld world : loadedWorlds.values()) {
+        List<AnaxWorld> worlds = new ArrayList<>(loadedWorlds.values());
+        for(AnaxWorld world : worlds) {
             unloadWorld(world);
         }
     }

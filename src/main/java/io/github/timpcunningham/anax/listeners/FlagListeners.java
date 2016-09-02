@@ -1,7 +1,7 @@
 package io.github.timpcunningham.anax.listeners;
 
 import io.github.timpcunningham.anax.utils.player.EventUtils;
-import io.github.timpcunningham.anax.world.FlagType;
+import io.github.timpcunningham.anax.world.types.FlagType;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

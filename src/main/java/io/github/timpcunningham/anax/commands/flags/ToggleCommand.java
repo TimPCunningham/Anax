@@ -11,7 +11,7 @@ import io.github.timpcunningham.anax.utils.player.PlayerUtils;
 import io.github.timpcunningham.anax.utils.world.WorldUtils;
 import io.github.timpcunningham.anax.world.AnaxWorldManagement;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;
-import io.github.timpcunningham.anax.world.FlagType;
+import io.github.timpcunningham.anax.world.types.FlagType;
 import io.github.timpcunningham.anax.world.tables.Flags;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;

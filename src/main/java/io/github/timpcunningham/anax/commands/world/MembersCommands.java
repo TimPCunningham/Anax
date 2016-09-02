@@ -12,10 +12,9 @@ import io.github.timpcunningham.anax.utils.chat.Chat;
 import io.github.timpcunningham.anax.utils.chat.Lang;
 import io.github.timpcunningham.anax.utils.player.CommandUtils;
 import io.github.timpcunningham.anax.utils.world.WorldUtils;
-import io.github.timpcunningham.anax.world.RoleType;
+import io.github.timpcunningham.anax.world.types.RoleType;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

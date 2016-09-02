@@ -6,7 +6,7 @@ import com.sk89q.minecraft.util.commands.WrappedCommandSender;
 import com.sk89q.minecraft.util.pagination.PaginatedResult;
 import io.github.timpcunningham.anax.utils.chat.Lang;
 import io.github.timpcunningham.anax.utils.player.PlayerUtils;
-import io.github.timpcunningham.anax.world.RoleType;
+import io.github.timpcunningham.anax.world.types.RoleType;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

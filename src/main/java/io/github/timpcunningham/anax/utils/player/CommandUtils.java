@@ -4,7 +4,7 @@ import io.github.timpcunningham.anax.exceptions.LocalizedCommandException;
 import io.github.timpcunningham.anax.utils.chat.Lang;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;
 import io.github.timpcunningham.anax.world.AnaxWorldManagement;
-import io.github.timpcunningham.anax.world.FlagType;
+import io.github.timpcunningham.anax.world.types.FlagType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

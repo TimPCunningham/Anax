@@ -1,7 +1,7 @@
 package io.github.timpcunningham.anax.world.tables;
 
 import io.github.timpcunningham.anax.utils.chat.Lang;
-import io.github.timpcunningham.anax.world.FlagType;
+import io.github.timpcunningham.anax.world.types.FlagType;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

@@ -1,6 +1,6 @@
 package io.github.timpcunningham.anax.world.tables;
 
-import io.github.timpcunningham.anax.world.RoleType;
+import io.github.timpcunningham.anax.world.types.RoleType;
 
 import javax.persistence.*;
 import java.util.UUID;

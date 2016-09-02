@@ -4,7 +4,7 @@ import com.avaje.ebean.Query;
 import io.github.timpcunningham.anax.Anax;
 import io.github.timpcunningham.anax.player.AnaxPlayer;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;
-import io.github.timpcunningham.anax.world.RoleType;
+import io.github.timpcunningham.anax.world.types.RoleType;
 import io.github.timpcunningham.anax.world.tables.Flags;
 import io.github.timpcunningham.anax.world.tables.Spawn;
 

@@ -1,4 +1,4 @@
-package io.github.timpcunningham.anax.world;
+package io.github.timpcunningham.anax.world.types;
 
 public enum Phase {
     ABANDONED,

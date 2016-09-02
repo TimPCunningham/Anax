@@ -8,8 +8,17 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.hanging.HangingBreakEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.*;
+import org.bukkit.event.vehicle.VehicleCreateEvent;
+import org.bukkit.event.vehicle.VehicleDamageEvent;
+import org.bukkit.event.vehicle.VehicleDestroyEvent;
+import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.event.world.StructureGrowEvent;
+import org.bukkit.inventory.Inventory;
 
 public class FlagListeners implements Listener {
 
@@ -134,6 +143,100 @@ public class FlagListeners implements Listener {
         boolean hostileResult = EventUtils.event(FlagType.MONSTERS, event.getEntity().getWorld());
 
         event.setCancelled((passiveResult && isPassive(event.getEntity())) || (hostileResult && isHostile(event.getEntity())));
+    }
+    //endregion
+
+    //region locked world events
+    @EventHandler
+    public void blockPlace(BlockPlaceEvent event) {
+        event.setCancelled(EventUtils.lockEvent(event.getPlayer().getWorld()));
+    }
+
+    @EventHandler
+    public void blockBreak(BlockBreakEvent event) {
+        event.setCancelled(EventUtils.lockEvent(event.getPlayer().getWorld()));
+    }
+
+    @EventHandler
+    public void bucketEmpty(PlayerBucketEmptyEvent event) {
+        event.setCancelled(EventUtils.lockEvent(event.getPlayer().getWorld()));
+    }
+
+    @EventHandler
+    public void bucketFill(PlayerBucketFillEvent event) {
+        event.setCancelled(EventUtils.lockEvent(event.getPlayer().getWorld()));
+    }
+
+    @EventHandler
+    public void itemDrop(PlayerDropItemEvent event) {
+        if(EventUtils.lockEvent(event.getPlayer().getWorld())) {
+            event.getItemDrop().remove();
+        }
+    }
+
+    @EventHandler
+    public void itemPickup(PlayerPickupItemEvent event) {
+        event.setCancelled(EventUtils.lockEvent(event.getPlayer().getWorld()));
+    }
+
+    @EventHandler
+    public void arrowPickup(PlayerPickupArrowEvent event) {
+        event.setCancelled(EventUtils.lockEvent(event.getPlayer().getWorld()));
+    }
+
+    @EventHandler
+    public void vehicleEnter(VehicleEnterEvent event) {
+        event.setCancelled(EventUtils.lockEvent(event.getEntered().getWorld()));
+    }
+
+    @EventHandler
+    public void vehicleCreate(VehicleCreateEvent event) {
+        if(EventUtils.lockEvent(event.getVehicle().getWorld())) {
+            event.getVehicle().remove();
+        }
+    }
+
+    @EventHandler
+    public void vehicleDamage(VehicleDamageEvent event) {
+        event.setCancelled(EventUtils.lockEvent(event.getVehicle().getWorld()));
+    }
+
+    @EventHandler
+    public void vehicleDestroy(VehicleDestroyEvent event) {
+        event.setCancelled(EventUtils.lockEvent(event.getVehicle().getWorld()));
+    }
+
+    @EventHandler
+    public void shootProjectile(ProjectileLaunchEvent event) {
+        event.setCancelled(EventUtils.lockEvent(event.getEntity().getWorld()));
+    }
+
+    @EventHandler
+    public void inventoryClick(InventoryClickEvent event) {
+        InventoryType type = event.getInventory().getType();
+        boolean allowed = type.equals(InventoryType.CREATIVE) || type.equals(InventoryType.PLAYER);
+
+        event.setCancelled(!allowed && EventUtils.lockEvent(event.getWhoClicked().getWorld()));
+    }
+
+    @EventHandler
+    public void itemSpawn(ItemSpawnEvent event) {
+        event.setCancelled(EventUtils.lockEvent(event.getEntity().getWorld()));
+    }
+
+    @EventHandler
+    public void entityTarget(EntityTargetEvent event) {
+        event.setCancelled(EventUtils.lockEvent(event.getEntity().getWorld()));
+    }
+
+    @EventHandler
+    public void entityTame(EntityTameEvent event) {
+        event.setCancelled(EventUtils.lockEvent(event.getEntity().getWorld()));
+    }
+
+    @EventHandler
+    public void entityDamage(EntityDamageByEntityEvent event) {
+        event.setCancelled(EventUtils.lockEvent(event.getEntity().getWorld()));
     }
     //endregion
 

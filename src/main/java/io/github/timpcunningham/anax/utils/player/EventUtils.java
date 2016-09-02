@@ -1,5 +1,6 @@
 package io.github.timpcunningham.anax.utils.player;
 
+import io.github.timpcunningham.anax.utils.server.Debug;
 import io.github.timpcunningham.anax.world.AnaxWorldManagement;
 import io.github.timpcunningham.anax.world.types.FlagType;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;
@@ -15,5 +16,11 @@ public class EventUtils {
         }
 
         return !anaxWorld.getFlagValue(type);
+    }
+
+    public static boolean lockEvent(World world) {
+        AnaxWorld anaxWorld = AnaxWorldManagement.getInstance().getWorld(world.getName());
+
+        return anaxWorld.isLocked();
     }
 }

@@ -11,10 +11,13 @@ import io.github.timpcunningham.anax.utils.chat.Lang;
 import io.github.timpcunningham.anax.utils.command.MapPages;
 import io.github.timpcunningham.anax.utils.player.CommandUtils;
 import io.github.timpcunningham.anax.utils.server.AnaxDatabase;
+import io.github.timpcunningham.anax.utils.server.Debug;
 import io.github.timpcunningham.anax.utils.world.WorldUtils;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;
 import io.github.timpcunningham.anax.world.AnaxWorldManagement;
+import io.github.timpcunningham.anax.world.types.Access;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -35,14 +38,14 @@ public class MapCommands {
         List<AnaxWorld> worlds;
         int page = 1;
 
-        if(args.argsLength() == 0) {
+        if(args.argsLength() >= 0) {
             page = args.getInteger(0, 1);
         }
 
         if(args.hasFlag('m')) {
             worlds = AnaxWorldManagement.getInstance().getPlayerWorlds(player.getUniqueId());
         } else {
-            worlds = new ArrayList<>(AnaxWorldManagement.getInstance().getWorlds());
+            worlds = new ArrayList<>(AnaxDatabase.getAnaxWorlds());
         }
 
         if(worlds.size() > 0) {
@@ -85,20 +88,17 @@ public class MapCommands {
 
             AnaxWorld world = AnaxDatabase.getWorldByShortName(match);
 
+            Chat.alertPlayer(player, Lang.COMMAND_MAP_TELEPORT, null, world.getShortName());
+
             if(world.isLoaded() || manager.isDefaultWorld(world)) {
                 world = manager.getWorld(world.getFullName());
                 player.teleport(world.getSpawn());
             } else {
-                if(WorldUtils.CanVisit(player, world)) {
-                    manager.loadWorld(world);
-                    world.setWorld(Bukkit.getWorld(world.getFullName()));
-                    player.teleport(world.getSpawn());
-                } else {
-                    throw new LocalizedCommandException(player, Lang.WORLD_CANT_ACCESS);
-                }
+                manager.loadWorld(world);
+                AnaxDatabase.update(world);
+                world.setWorld(Bukkit.getWorld(world.getFullName()));
+                player.teleport(world.getSpawn());
             }
-
-            Chat.alertPlayer(player, Lang.COMMAND_MAP_TELEPORT, null, world.getShortName());
         }
     }
 
@@ -185,11 +185,54 @@ public class MapCommands {
         changeLockStatus(sender, false, Lang.COMMAND_UNLOCK_SUCCESS, Lang.COMMAND_UNLOCK_ERROR);
     }
 
+    @Command(
+            aliases = {"setspawn"},
+            desc = "Sets the spawn of the world",
+            min = 0, max = 0
+    )
+    @CommandPermissions("anax.command.setspawn")
+    public static void setspawn(CommandContext args, CommandSender sender) throws LocalizedException {
+        Player player = CommandUtils.validateAsPlayer(sender);
+        AnaxWorld world = CommandUtils.validateWorldLoaded(player, player.getWorld().getName());
+
+        WorldUtils.assertCanManage(player, world);
+
+        world.setSpawn(player.getLocation());
+        Chat.alertPlayer(player, Lang.COMMAND_SPAWN_SET, null);
+    }
+
+    @Command(
+            aliases = {"state"},
+            desc = "Changes who can access this world",
+            usage = "<Public|Private>",
+            min = 1, max = 1
+    )
+    @CommandPermissions("anax.command.state")
+    public static void state(CommandContext args, CommandSender sender) throws LocalizedCommandException {
+        Player player = CommandUtils.validateAsPlayer(sender);
+        AnaxWorld world = CommandUtils.validateWorldLoaded(player, player.getWorld().getName());
+
+        WorldUtils.assertCanManage(player, world);
+
+        if(AnaxWorldManagement.getInstance().isDefaultWorld(world)) {
+            throw new LocalizedCommandException(player, Lang.WORLD_DEFAULT_DENY);
+        }
+
+        try {
+            Access access = Access.valueOf(args.getString(0).toUpperCase());
+            world.setAccess(access);
+            Chat.alertPlayer(player, Lang.COMMAND_STATE_SET, null, access.name());
+        } catch (Exception e) {
+            throw new LocalizedCommandException(sender, Lang.COMMAND_STATE_ERROR, args.getString(0));
+        }
+    }
+
     private static void changeLockStatus(CommandSender sender, boolean status, Lang success, Lang fail) throws LocalizedCommandException {
         Player player = CommandUtils.validateAsPlayer(sender);
         AnaxWorld world = CommandUtils.validateWorldLoaded(sender, player.getWorld().getName());
 
         WorldUtils.assertCanManage(player, world);
+
 
         if(AnaxWorldManagement.getInstance().isDefaultWorld(world)) {
             throw new LocalizedCommandException(player, Lang.WORLD_DEFAULT_DENY);

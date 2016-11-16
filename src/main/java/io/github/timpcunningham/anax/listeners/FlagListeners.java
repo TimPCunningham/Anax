@@ -253,6 +253,7 @@ public class FlagListeners implements Listener {
                entity instanceof IronGolem ||
                entity instanceof Snowman   ||
                entity instanceof Squid     ||
+               entity instanceof Bat       ||
                entity instanceof Villager;
     }
     //endregion

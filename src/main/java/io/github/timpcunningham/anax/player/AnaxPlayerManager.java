@@ -90,7 +90,9 @@ public class AnaxPlayerManager {
             serverPlayer.setName("Anax");
             serverPlayer.setFirstJoin(new Date());
             serverPlayer.setJoins(Integer.MAX_VALUE);
+            AnaxDatabase.save(serverPlayer);
         }
+
         players.put(serverPlayer.getUuid(), serverPlayer);
     }
 

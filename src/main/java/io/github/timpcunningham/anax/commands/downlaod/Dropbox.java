@@ -14,6 +14,7 @@ import io.github.timpcunningham.anax.utils.Fuzzy;
 import io.github.timpcunningham.anax.utils.chat.Chat;
 import io.github.timpcunningham.anax.utils.chat.Lang;
 import io.github.timpcunningham.anax.utils.command.Callback;
+import io.github.timpcunningham.anax.utils.server.AnaxDatabase;
 import io.github.timpcunningham.anax.utils.server.Debug;
 import io.github.timpcunningham.anax.world.AnaxWorldManagement;
 import io.github.timpcunningham.anax.world.types.RoleType;
@@ -73,7 +74,7 @@ public class Dropbox extends BukkitRunnable {
         List<String> possibilities = new ArrayList<>();
         String bestMatch;
 
-        if(!Fuzzy.findBestMatch(newName, AnaxWorldManagement.getInstance().getCreatedWorldNames()).equalsIgnoreCase("")) {
+        if(AnaxDatabase.isWorld(newName)) {
             throw new LocalizedCommandException(player, Lang.COMMAND_IMPORT_DUPLICATE);
         }
 
@@ -110,7 +111,7 @@ public class Dropbox extends BukkitRunnable {
 
         try {
             for(Metadata entry : client.files().listFolder(toDownload).getEntries()) {
-                if(entry instanceof FolderMetadata) {
+                if(entry instanceof FolderMetadata && verifyFile(entry.getName())) {
                     download(toDownload + "/" + entry.getName(), dest + "/" + entry.getName());
                 } else if(entry instanceof FileMetadata) {
                     DbxDownloader downloader = client.files().download(entry.getPathLower());
@@ -127,6 +128,12 @@ public class Dropbox extends BukkitRunnable {
         }
     }
 
+    private boolean verifyFile(String name) {
+        return  name.equalsIgnoreCase("level.dat") ||
+                name.endsWith(".mca")              ||
+                name.endsWith(".png")              ||
+                name.endsWith(".xml");
+    }
 
     public void upload(Player player, String path, String world, Callback callback) throws LocalizedException {
         try {
@@ -167,7 +174,7 @@ public class Dropbox extends BukkitRunnable {
     }
 
     public void prune(String path) {
-
+        //TODO - Add pruning
     }
 
     public boolean isSupported() {

@@ -35,6 +35,7 @@ public class DeleteCallback implements Callback {
         new BukkitRunnable() {
             public void run() {
                 Bukkit.unloadWorld(world.getWorld(), false);
+                System.gc();
                 FileUtils.deleteFile(Paths.get(Bukkit.getWorldContainer().getAbsolutePath(), world.getFullName()).toFile());
                 Chat.alertPlayer(player, Lang.COMMAND_DELETE_SUCCESS, Lang.FORMAT_GLOBAL_ALERT, world.getShortName());
             }

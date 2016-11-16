@@ -75,8 +75,17 @@ public class AnaxWorldManagement {
         Bukkit.unloadWorld(world.getWorld(), true);
         world.setLoaded(false);
         world.saveData();
-        AnaxDatabase.update(world);
         loadedWorlds.remove(world.getFullName());
+        AnaxDatabase.update(world);
+    }
+
+    public void saveWorlds() {
+        for(AnaxWorld world : getWorlds()) {
+            world.saveData();
+            AnaxDatabase.update(world);
+            AnaxPlayerManager.getInstance().sendToHub(world);
+            Bukkit.unloadWorld(world.getWorld(), true);
+        }
     }
 
     public void removeWorld(String name) {

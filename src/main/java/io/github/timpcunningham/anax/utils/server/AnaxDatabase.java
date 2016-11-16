@@ -4,6 +4,7 @@ import com.avaje.ebean.Query;
 import io.github.timpcunningham.anax.Anax;
 import io.github.timpcunningham.anax.player.AnaxPlayer;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;
+import io.github.timpcunningham.anax.world.tables.Role;
 import io.github.timpcunningham.anax.world.types.RoleType;
 import io.github.timpcunningham.anax.world.tables.Flags;
 import io.github.timpcunningham.anax.world.tables.Spawn;
@@ -56,6 +57,14 @@ public class AnaxDatabase {
 
     public static AnaxPlayer getAnaxPlayer(UUID uuid) {
         return Anax.get().getDatabase().find(AnaxPlayer.class).where().eq("uuid", uuid).findUnique();
+    }
+
+    public static List<UUID> getOwners(AnaxWorld world) {
+        List<Role> owners = AnaxDatabase.find(Role.class).where()
+                .eq("world", world.getFullName())
+                .eq("type", RoleType.OWNER).findList();
+
+        return owners.stream().map(Role::getPlayer).collect(Collectors.toList());
     }
 
     public static void save(Object obj) {

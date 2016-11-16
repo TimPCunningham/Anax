@@ -29,7 +29,7 @@ public class Flags {
         monsters = false;
         physics = true;
         weather = false;
-        world = true;
+        world = false;
     }
 
     public boolean toggle(FlagType type) {

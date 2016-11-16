@@ -6,6 +6,7 @@ import com.sk89q.minecraft.util.commands.WrappedCommandSender;
 import com.sk89q.minecraft.util.pagination.PaginatedResult;
 import io.github.timpcunningham.anax.utils.chat.Lang;
 import io.github.timpcunningham.anax.utils.player.PlayerUtils;
+import io.github.timpcunningham.anax.utils.server.AnaxDatabase;
 import io.github.timpcunningham.anax.world.types.RoleType;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;
 import org.bukkit.command.CommandSender;
@@ -42,7 +43,7 @@ public class MapPages extends PaginatedResult<AnaxWorld> {
 
     @Override
     public String format(AnaxWorld world, int i) {
-        List<UUID> owners = new ArrayList<>(world.getMemeberList(RoleType.OWNER));
+        List<UUID> owners = new ArrayList<>(AnaxDatabase.getOwners(world));
 
         if(owners.size() > 0) {
             return Lang.COMMAND_MAPS_MULTIOWNERS.get(locale, (i + 1), world.getShortName(), StringUtil.toDisplay(PlayerUtils.toNameList(owners)));

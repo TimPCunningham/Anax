@@ -18,6 +18,6 @@ public class LocalizedCommandException extends LocalizedException {
             String locale = ((Player) sender).spigot().getLocale();
             return getReason().get(locale, getArgs());
         }
-        return getMessage();
+        return super.getMessage();
     }
 }

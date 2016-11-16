@@ -12,10 +12,13 @@ import io.github.timpcunningham.anax.commands.importing.ImportCommand;
 import io.github.timpcunningham.anax.commands.world.CreateCommand;
 import io.github.timpcunningham.anax.commands.world.MembersCommands;
 import io.github.timpcunningham.anax.commands.world.delete.DeleteCommand;
+import io.github.timpcunningham.anax.exceptions.LocalizedException;
 import io.github.timpcunningham.anax.listeners.*;
 import io.github.timpcunningham.anax.player.AnaxPlayer;
 import io.github.timpcunningham.anax.player.AnaxPlayerManager;
+import io.github.timpcunningham.anax.utils.chat.Chat;
 import io.github.timpcunningham.anax.utils.chat.ComponentBuilder;
+import io.github.timpcunningham.anax.utils.chat.Lang;
 import io.github.timpcunningham.anax.utils.server.Debug;
 import io.github.timpcunningham.anax.utils.world.WorldUtils;
 import io.github.timpcunningham.anax.world.AnaxWorldManagement;
@@ -63,16 +66,18 @@ public class Anax extends JavaPlugin {
         Dropbox.getInstance().runTaskTimerAsynchronously(this, dropbox_poll, dropbox_poll);
 
         setupDatabase();
-        setupCommands();
-        setupListeners();
 
         AnaxPlayerManager.getInstance().createServerPlayer();
         WorldUtils.loadAllWorlds();
+
+        setupCommands();
+        setupListeners();
+
     }
 
     @Override
     public void onDisable() {
-        AnaxWorldManagement.getInstance().unloadAll();
+        AnaxWorldManagement.getInstance().saveWorlds();
     }
 
     public static Anax get() {
@@ -187,13 +192,17 @@ public class Anax extends JavaPlugin {
     }
 
     public void loadBuilderPermissions() {
-        ConfigurationSection section = getConfig().getConfigurationSection("builder.permissions");
+        List<String> permissions = getConfig().getStringList("builder.permissions");
         Map<String, Boolean> childern = new HashMap<>();
 
-        for(String key : section.getKeys(true)) {
-            if(section.getConfigurationSection(key) == null) {
-                childern.put(key, section.getBoolean(key, false));
+        for(String perm : permissions) {
+            String[] parts = perm.split(":");
+
+            if(parts.length != 2) {
+                Chat.alertConsole(Lang.MALFORMED_PERMISSION, perm);
             }
+
+            childern.put(parts[0], Boolean.valueOf(parts[1]));
         }
 
         builderPermission = new Permission("anax.world.builder", "World builder building permission", PermissionDefault.FALSE, childern);

@@ -1,8 +1,13 @@
 package io.github.timpcunningham.anax.utils.player;
 
 import io.github.timpcunningham.anax.Anax;
+import io.github.timpcunningham.anax.player.AnaxPlayer;
 import io.github.timpcunningham.anax.utils.chat.Chat;
 import io.github.timpcunningham.anax.utils.chat.Lang;
+import io.github.timpcunningham.anax.utils.server.AnaxDatabase;
+import io.github.timpcunningham.anax.world.tables.AnaxWorld;
+import io.github.timpcunningham.anax.world.tables.Role;
+import io.github.timpcunningham.anax.world.types.RoleType;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -11,6 +16,7 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class PlayerUtils {
@@ -31,9 +37,9 @@ public class PlayerUtils {
     }
 
     public static String getName(UUID uuid) {
-        OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+        AnaxPlayer player = AnaxDatabase.getAnaxPlayer(uuid);
 
-        if(player.hasPlayedBefore()) {
+        if(player != null) {
             return player.getName();
         } else {
             //TODO - Lookup
@@ -50,19 +56,11 @@ public class PlayerUtils {
     }
 
     public static int getCurrentWorldCount(Player player) {
-        String path = Anax.get().getWorldBasePath() + player.getUniqueId() + "/";
-        File file = new File(path);
+        UUID uuid = player.getUniqueId();
 
-        if(!file.exists()) {
-            file.mkdirs();
-        }
-
-        try {
-            return file.listFiles().length;
-        } catch (NullPointerException e) {
-            Chat.alertConsole(Lang.PLAYER_WORLD_CURRENT_PARSE_ERROR, player.getName());
-            return Integer.MAX_VALUE;
-        }
+        return (int) AnaxDatabase.getAnaxWorlds().stream()
+                .filter(world -> world.getFullName().contains(String.valueOf(uuid)))
+                .count();
     }
 
     public static int getMaxWorlds(Player player) {
@@ -81,5 +79,11 @@ public class PlayerUtils {
             }
         }
         return 1;
+    }
+
+    public static boolean hasRole(Player player, AnaxWorld world, RoleType type) {
+        Set<UUID> members = world.getMemeberList(type);
+
+        return members.contains(player.getUniqueId());
     }
 }

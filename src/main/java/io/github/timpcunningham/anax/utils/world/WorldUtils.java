@@ -26,14 +26,13 @@ public class WorldUtils {
         }
     }
 
-    public static boolean CanVisit(Player player, AnaxWorld world) {
+    public static boolean canVisit(Player player, AnaxWorld world) {
         UUID uuid = player.getUniqueId();
         if(world.getAccess().equals(Access.PUBLIC) || player.hasPermission("anax.tp.all")) {
             return true;
         } else {
             return  world.isRole(RoleType.OWNER, uuid)   ||
-                    world.isRole(RoleType.BUILDER, uuid) ||
-                    world.isRole(RoleType.VISITOR, uuid);
+                    world.isRole(RoleType.BUILDER, uuid);
         }
     }
 

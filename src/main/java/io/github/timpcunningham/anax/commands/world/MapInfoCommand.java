@@ -3,7 +3,6 @@ package io.github.timpcunningham.anax.commands.world;
 import com.sk89q.minecraft.util.commands.ChatColor;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.worldedit.util.command.binding.Text;
 import io.github.timpcunningham.anax.exceptions.LocalizedCommandException;
 import io.github.timpcunningham.anax.player.AnaxPlayer;
 import io.github.timpcunningham.anax.player.AnaxPlayerManager;

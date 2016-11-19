@@ -34,12 +34,13 @@ public class AnaxPlayerManager {
             anaxPlayer.setUuid(player.getUniqueId());
             anaxPlayer.setFirstJoin(new Date());
             anaxPlayer.setChannel(Channel.GLOBAL);
+            AnaxDatabase.save(anaxPlayer);
         }
 
         anaxPlayer.setName(player.getName()); //update name when adding
         anaxPlayer.setPlayer(player);
         anaxPlayer.setJoins(anaxPlayer.getJoins() + 1);
-        AnaxDatabase.save(anaxPlayer);
+        AnaxDatabase.update(anaxPlayer);
 
         players.put(player.getUniqueId(), anaxPlayer);
     }

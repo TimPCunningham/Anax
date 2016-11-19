@@ -10,6 +10,7 @@ import io.github.timpcunningham.anax.commands.downlaod.Dropbox;
 import io.github.timpcunningham.anax.commands.flags.ToggleCommand;
 import io.github.timpcunningham.anax.commands.importing.ImportCommand;
 import io.github.timpcunningham.anax.commands.world.CreateCommand;
+import io.github.timpcunningham.anax.commands.world.MapInfoCommand;
 import io.github.timpcunningham.anax.commands.world.MembersCommands;
 import io.github.timpcunningham.anax.commands.world.delete.DeleteCommand;
 import io.github.timpcunningham.anax.exceptions.LocalizedException;
@@ -101,6 +102,7 @@ public class Anax extends JavaPlugin {
         cmdRegister.register(DownloadCommand.class);
         cmdRegister.register(ImportCommand.class);
         cmdRegister.register(MapCommands.class);
+        cmdRegister.register(MapInfoCommand.class);
         cmdRegister.register(MembersCommands.class);
         cmdRegister.register(ToggleCommand.class);
     }

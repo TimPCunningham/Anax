@@ -2,6 +2,7 @@ package io.github.timpcunningham.anax.world.tables;
 
 import io.github.timpcunningham.anax.utils.chat.Lang;
 import io.github.timpcunningham.anax.world.types.FlagType;
+import net.md_5.bungee.api.ChatColor;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -81,6 +82,12 @@ public class Flags {
         }
     }
 
+    public String getVisualValue(FlagType type) {
+        return isEnabled(type) ?
+                ChatColor.GREEN + type.name().toLowerCase() :
+                ChatColor.RED + type.name().toLowerCase();
+    }
+
     public Lang getDescription(FlagType type) {
         switch (type) {
             case ANIMALS:
@@ -106,7 +113,7 @@ public class Flags {
         Map<String, FlagContianer> flags = new HashMap<>();
 
         for(FlagType type : FlagType.values()) {
-            flags.put(type.name(), new FlagContianer(isEnabled(type), getDescription(type)));
+            flags.put(type.name(), new FlagContianer(type, isEnabled(type), getDescription(type)));
         }
 
         return  flags;
@@ -182,10 +189,12 @@ public class Flags {
     public class FlagContianer {
         public Lang description;
         public boolean value;
+        public String formatedName;
 
-        public FlagContianer(boolean value, Lang description) {
+        public FlagContianer(FlagType flagType, boolean value, Lang description) {
             this.value = value;
             this.description = description;
+            formatedName = getVisualValue(flagType);
         }
     }
     //endregion

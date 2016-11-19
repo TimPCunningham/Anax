@@ -129,9 +129,9 @@ public class Dropbox extends BukkitRunnable {
     }
 
     private boolean verifyFile(String name) {
-        return  name.equalsIgnoreCase("level.dat") ||
-                name.endsWith(".mca")              ||
-                name.endsWith(".png")              ||
+        return  name.endsWith(".dat") ||
+                name.endsWith(".mca") ||
+                name.endsWith(".png") ||
                 name.endsWith(".xml");
     }
 

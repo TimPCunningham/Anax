@@ -25,8 +25,10 @@ public class DeleteCallback implements Callback {
         Player player = (Player)args[1];
 
         AnaxDatabase.deleteWorld(world);
-        AnaxPlayerManager.getInstance().sendToHub(world);
-        AnaxWorldManagement.getInstance().removeWorld(world.getFullName());
+        if(world.isLoaded()) {
+            AnaxPlayerManager.getInstance().sendToHub(world);
+            AnaxWorldManagement.getInstance().removeWorld(world.getFullName());
+        }
 
         if(UnloadListener.getInstance().isEmpty(world.getFullName())) {
             UnloadListener.getInstance().remove(world.getFullName());
@@ -34,7 +36,9 @@ public class DeleteCallback implements Callback {
 
         new BukkitRunnable() {
             public void run() {
-                Bukkit.unloadWorld(world.getWorld(), false);
+                if(world.isLoaded()) {
+                    Bukkit.unloadWorld(world.getWorld(), false);
+                }
                 System.gc();
                 FileUtils.deleteFile(Paths.get(Bukkit.getWorldContainer().getAbsolutePath(), world.getFullName()).toFile());
                 Chat.alertPlayer(player, Lang.COMMAND_DELETE_SUCCESS, Lang.FORMAT_GLOBAL_ALERT, world.getShortName());

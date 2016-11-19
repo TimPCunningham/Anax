@@ -38,17 +38,18 @@ public class MapInfoCommand {
         String locale = "en_US";
         String status;
         AnaxWorld world;
+        AnaxWorldManagement worldManager = AnaxWorldManagement.getInstance();
 
         if(args.argsLength() == 1) {
-            List<String> worlds = AnaxWorldManagement.getInstance().getCreatedWorldNames();
+            List<String> worlds = worldManager.getCreatedWorldNames();
             String match = Fuzzy.findBestMatch(args.getString(0), worlds);
 
             if(match.equals("")) {
                 throw new LocalizedCommandException(sender, Lang.WORLD_NOT_FOUND, args.getString(0));
             }
             world = AnaxDatabase.getWorldByShortName(match);
-            if(AnaxWorldManagement.getInstance().isLoadedWorld(world.getFullName())) {
-                world = AnaxWorldManagement.getInstance().getWorld(world.getFullName());
+            if(worldManager.isLoadedWorld(world.getFullName())) {
+                world = worldManager.getWorld(world.getFullName());
             } else {
                 world.retrieveData();
             }

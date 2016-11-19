@@ -2,6 +2,7 @@ package io.github.timpcunningham.anax.utils.command;
 
 import com.google.common.base.Strings;
 import com.sk89q.minecraft.util.commands.ChatColor;
+import io.github.timpcunningham.anax.utils.server.Debug;
 import org.bukkit.util.ChatPaginator;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class StringUtil {
         if(input.size() > 1) {
             result = replaceLast(result, ", ", ", and ");
         }
+
         return result;
     }
 
@@ -37,7 +39,7 @@ public class StringUtil {
         if(index < 0) {
             return  input;
         } else {
-            return input.substring(0, index - 1) + newSeq + input.substring(index + oldSeq.length());
+            return input.substring(0, index) + newSeq + input.substring(index + oldSeq.length());
         }
     }
 }

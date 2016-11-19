@@ -149,7 +149,6 @@ public class AnaxWorld implements Comparable<AnaxWorld> {
      * @return returns the spawn as a Location
      */
     public Location getSpawn() {
-        Debug.info(spawn.x + " " + spawn.y + " " + spawn.z);
         return spawn.toLocation(this.getWorld());
     }
 

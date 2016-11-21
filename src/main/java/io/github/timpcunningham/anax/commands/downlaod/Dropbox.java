@@ -111,9 +111,9 @@ public class Dropbox extends BukkitRunnable {
 
         try {
             for(Metadata entry : client.files().listFolder(toDownload).getEntries()) {
-                if(entry instanceof FolderMetadata && verifyFile(entry.getName())) {
+                if(entry instanceof FolderMetadata) {
                     download(toDownload + "/" + entry.getName(), dest + "/" + entry.getName());
-                } else if(entry instanceof FileMetadata) {
+                } else if(entry instanceof FileMetadata && verifyFile(entry.getName())) {
                     DbxDownloader downloader = client.files().download(entry.getPathLower());
                     OutputStream outputStream = new FileOutputStream(dest + "/" + entry.getName());
 

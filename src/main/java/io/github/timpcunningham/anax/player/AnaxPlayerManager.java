@@ -28,10 +28,11 @@ public class AnaxPlayerManager {
     }
 
     public void addPlayer(Player player) {
-        AnaxPlayer anaxPlayer = (AnaxPlayer)AnaxDatabase.find(AnaxPlayer.class).where().eq("uuid", player.getUniqueId()).findUnique();
+        AnaxPlayer anaxPlayer = AnaxDatabase.getAnaxPlayer(player.getUniqueId());
         if(anaxPlayer == null) {
             anaxPlayer = new AnaxPlayer();
             anaxPlayer.setUuid(player.getUniqueId());
+            anaxPlayer.setName(player.getName());
             anaxPlayer.setFirstJoin(new Date());
             anaxPlayer.setChannel(Channel.GLOBAL);
             AnaxDatabase.save(anaxPlayer);
@@ -65,7 +66,14 @@ public class AnaxPlayerManager {
     }
 
     public AnaxPlayer getAnaxPlayer(UUID uuid) {
-        return players.get(uuid);
+        AnaxPlayer player = players.get(uuid);
+
+        if(player == null) {
+            player = AnaxDatabase.getAnaxPlayer(uuid);
+        }
+
+
+        return player;
     }
 
     public AnaxPlayer findAnaxPlayer(String name) {

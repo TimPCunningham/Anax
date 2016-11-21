@@ -14,6 +14,7 @@ import io.github.timpcunningham.anax.utils.command.StringUtil;
 import io.github.timpcunningham.anax.utils.player.CommandUtils;
 import io.github.timpcunningham.anax.utils.player.PlayerUtils;
 import io.github.timpcunningham.anax.utils.server.AnaxDatabase;
+import io.github.timpcunningham.anax.utils.server.Debug;
 import io.github.timpcunningham.anax.world.AnaxWorldManagement;
 import io.github.timpcunningham.anax.world.tables.AnaxWorld;
 import io.github.timpcunningham.anax.world.tables.Flags;

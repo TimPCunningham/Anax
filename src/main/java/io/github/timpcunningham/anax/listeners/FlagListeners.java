@@ -44,6 +44,12 @@ public class FlagListeners implements Listener {
 
     //region World Events
     @EventHandler
+    public void iceForm(BlockFormEvent event) {
+        boolean result = EventUtils.event(FlagType.WORLD, event.getBlock().getWorld());
+        event.setCancelled(result);
+    }
+
+    @EventHandler
     public void blockFade(BlockFadeEvent event) {
         boolean result = EventUtils.event(FlagType.WORLD, event.getBlock().getWorld());
         event.setCancelled(result);

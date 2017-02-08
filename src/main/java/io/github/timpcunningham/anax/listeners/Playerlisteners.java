@@ -17,6 +17,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 
 public class Playerlisteners implements Listener {
@@ -59,5 +60,22 @@ public class Playerlisteners implements Listener {
                 player.teleport(spawn);
             }
         }
+    }
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        Player player = event.getEntity();
+        AnaxWorld world = AnaxWorldManagement.getInstance().getWorld(player.getWorld().getName());
+        Location spawn;
+
+        if(!WorldUtils.canVisit(player, world)) {
+            spawn = AnaxWorldManagement.getInstance().getDefaultWorld().getSpawn();
+            Chat.alertPlayer(player, Lang.WORLD_DENY_ACCESS, null);
+        } else {
+            spawn = world.getSpawn();
+        }
+
+        player.setBedSpawnLocation(spawn, true);
+
     }
 }
